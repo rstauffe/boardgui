@@ -1,0 +1,11 @@
+G, Great Hall
+B, Bedroom
+R, Library
+K, Kitchen
+P, Pool
+A, Bowling Alley
+S, Study
+F, Foyer
+L, Lounge
+X, Closet
+W, Walkway

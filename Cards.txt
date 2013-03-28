@@ -1,0 +1,21 @@
+Professor Plum, Person
+Colonel Mustard, Person
+Reverend Green, Person
+Mrs White, Person
+Mrs Peacock, Person
+Miss Scarlett, Person
+Great Hall, Room
+Bedroom, Room
+Library, Room
+Kitchen, Room
+Pool, Room
+Bowling Alley, Room
+Study, Room
+Foyer, Room
+Lounge, Room
+Rope, Weapon
+Candlestick, Weapon
+Revolver, Weapon
+Lead Pipe, Weapon
+Knife, Weapon
+Wrench, Weapon
