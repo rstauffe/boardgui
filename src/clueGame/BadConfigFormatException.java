@@ -11,15 +11,14 @@ public class BadConfigFormatException extends RuntimeException {
 	private String log = "errorLog.txt";
 	
 	public BadConfigFormatException(String file) {
-		super();
+		super("The file you provided: " + file + " is not a valid config file");
 		this.filename = file;
 		writeToLog(log, filename);
 	}
 	
-	
 	@Override
 	public String toString() {
-		return "The file you provided: " + filename + " is not a valid config file";
+		return this.getMessage();
 	}
 	
 	/*
@@ -39,5 +38,4 @@ public class BadConfigFormatException extends RuntimeException {
 		out.write("The file you provided was invalid: " + errorFile);
 		
 	}
-	
 }

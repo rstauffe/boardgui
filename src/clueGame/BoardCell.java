@@ -1,6 +1,12 @@
 package clueGame;
 
+<<<<<<< HEAD
 import java.awt.Graphics;
+=======
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+>>>>>>> ce872f9d25fbaba7bd94decca94f7200a5629013
 
 public abstract class BoardCell {
 
@@ -31,8 +37,7 @@ public abstract class BoardCell {
 	public int getCol() {
 		return col;
 	}
-	
-	//public abstract void draw(Graphics g);
-	 
-	
+
+	 public abstract void draw(Graphics g, Dimension size, Point loc);
+
 }

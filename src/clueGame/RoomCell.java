@@ -1,5 +1,10 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+
 public class RoomCell extends BoardCell {
 
 	public enum DoorDirection {UP, DOWN, LEFT, RIGHT, NONE};
@@ -37,9 +42,33 @@ public class RoomCell extends BoardCell {
 	public char getInitial() {
 		return roomInitial;
 	}
-	
-	/*
-	 * Space to implement draw function
-	 */
+
+	@Override
+	public void draw(Graphics g, Dimension size, Point loc) {
+		//draw room cell
+		g.setColor(Color.GRAY);
+		g.fillRect(loc.x, loc.y, size.width, size.height);
+		
+		//draw a doorway if applicable
+		if (isDoorway()) {
+			g.setColor(Color.BLUE);
+			switch (doorDirection) {
+				case UP: 
+					g.fillRect(loc.x, loc.y, size.width, clueGUI.BoardPanel.DOOR_SIZE);
+					break;
+				case DOWN: 
+					g.fillRect(loc.x, loc.y + size.height - clueGUI.BoardPanel.DOOR_SIZE, size.width, clueGUI.BoardPanel.DOOR_SIZE);
+					break;
+				case LEFT: 
+					g.fillRect(loc.x, loc.y, clueGUI.BoardPanel.DOOR_SIZE, size.height);
+					break;
+				case RIGHT: 
+					g.fillRect(loc.x + size.width - clueGUI.BoardPanel.DOOR_SIZE, loc.y, clueGUI.BoardPanel.DOOR_SIZE, size.height);
+					break;
+				default:
+					break;
+			}
+		}
+	}
 	
 }

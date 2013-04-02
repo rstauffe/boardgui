@@ -1,5 +1,8 @@
 package clueGame;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -335,5 +338,43 @@ public class Board {
 	public LinkedList<Integer> getAdjList(int cell) {
 		return adjacencies.get(cell);
 	}
+	
+	//returns a location for drawing based on the row and col parameters
+	public Point getDrawingPoint(int row, int col) {
+		Dimension size = new Dimension(clueGUI.BoardPanel.BOARD_CELL_SIZE, clueGUI.BoardPanel.BOARD_CELL_SIZE);
+		Point loc = new Point(0, 0);
+		loc.x = col * size.width;
+		loc.y = row * size.height;
+		return loc;
+	}
+	
+	//returns a location for drawing based on the index parameter
+		public Point getDrawingPoint(int index) {
+			int row = index / numColumns;
+			int col = index - (row*numColumns);
+			return getDrawingPoint(row, col);
+		}
 
+	//paints all of the board cells using the graphics parameter
+	public void drawBoard(Graphics g) {
+		//paint the board cells
+		Dimension size = new Dimension(clueGUI.BoardPanel.BOARD_CELL_SIZE, clueGUI.BoardPanel.BOARD_CELL_SIZE);
+		Point loc = new Point(0, 0);
+		int row = 0;
+		int col = 0;
+		for (BoardCell cell: cells) {
+			loc.x = col * size.width;
+			loc.y = row * size.height;
+			
+			cell.draw(g, size, loc);
+			
+			//increment column
+			col++;
+			if (col >= numColumns) {
+				//column exceeds max, go to next row
+				col = 0;
+				row++;
+			}
+		}
+	}
 }

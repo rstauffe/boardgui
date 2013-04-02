@@ -1,4 +1,4 @@
-Professor Plum, Purple, 0, 4
+Professor Plum, Magenta, 0, 4
 Reverend Green, Green, 0, 13
 Colonel Mustard, Yellow, 5, 17
 Mrs White, White, 15, 0
