@@ -52,19 +52,18 @@ public class RoomCell extends BoardCell {
 		//draw a doorway if applicable
 		if (isDoorway()) {
 			g.setColor(Color.BLUE);
-			int doorPixels = 5; //width or height of doorway
 			switch (doorDirection) {
 				case UP: 
-					g.fillRect(loc.x, loc.y, size.width, doorPixels);
+					g.fillRect(loc.x, loc.y, size.width, clueGUI.BoardPanel.DOOR_SIZE);
 					break;
 				case DOWN: 
-					g.fillRect(loc.x, loc.y + size.height - doorPixels, size.width, doorPixels);
+					g.fillRect(loc.x, loc.y + size.height - clueGUI.BoardPanel.DOOR_SIZE, size.width, clueGUI.BoardPanel.DOOR_SIZE);
 					break;
 				case LEFT: 
-					g.fillRect(loc.x, loc.y, doorPixels, size.height);
+					g.fillRect(loc.x, loc.y, clueGUI.BoardPanel.DOOR_SIZE, size.height);
 					break;
 				case RIGHT: 
-					g.fillRect(loc.x + size.width - doorPixels, loc.y, doorPixels, size.height);
+					g.fillRect(loc.x + size.width - clueGUI.BoardPanel.DOOR_SIZE, loc.y, clueGUI.BoardPanel.DOOR_SIZE, size.height);
 					break;
 				default:
 					break;

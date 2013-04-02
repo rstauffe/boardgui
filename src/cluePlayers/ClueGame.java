@@ -1,5 +1,7 @@
 package cluePlayers;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.Random;
@@ -223,5 +225,13 @@ public class ClueGame {
 
 	public Board getBoard() {
 		return board;
+	}
+	
+	public void drawPlayers(Graphics g) {
+		Dimension size = new Dimension(clueGUI.BoardPanel.BOARD_CELL_SIZE, clueGUI.BoardPanel.BOARD_CELL_SIZE);
+		player.draw(g, size, board.getDrawingPoint(player.getIndex()));
+		for (Player p: comps) {
+			p.draw(g, size, board.getDrawingPoint(p.getIndex()));
+		}
 	}
 }

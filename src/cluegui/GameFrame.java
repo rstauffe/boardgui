@@ -32,7 +32,7 @@ public class GameFrame extends JFrame {
 		
 		//Create game and use game board to create board panel
 		game = new ClueGame();
-		BoardPanel boardPanel = new BoardPanel(game.getBoard());
+		BoardPanel boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		
 		this.add(boardPanel, BorderLayout.CENTER);

@@ -2,15 +2,18 @@ package clueGUI;
 
 import java.awt.Graphics;
 import javax.swing.JPanel;
-import clueGame.Board;
+import cluePlayers.ClueGame;
 
 public class BoardPanel extends JPanel {
-
-	private Board board;
 	
-	public BoardPanel(Board board) {
+	public static final int BOARD_CELL_SIZE = 30;
+	public static final int DOOR_SIZE = 5;
+
+	private ClueGame game;
+	
+	public BoardPanel(ClueGame game) {
 		super();
-		this.board = board;
+		this.game = game;
 		
 		this.repaint();
 	}
@@ -18,6 +21,7 @@ public class BoardPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		board.drawBoard(g);
+		game.getBoard().drawBoard(g);
+		game.drawPlayers(g);
 	}
 }

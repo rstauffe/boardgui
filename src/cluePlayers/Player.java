@@ -1,29 +1,37 @@
 package cluePlayers;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 
+import clueGame.Board;
+
 public class Player {
 	private String name;
 	private LinkedList<Card> cards;
-	private String color;
+	private String colorStr;
+	private Color color;
 	private int index; 
 	private Random rand = new Random();
 
 	public Player(String name, LinkedList<Card> cards, String color, int index) {
 		this.name = name;
 		this.cards = cards;
-		this.color = color;
+		this.colorStr = color;
+		this.color = convertColor(colorStr);
 		this.index = index;
 	}
 
 	public Player(String name, String color, int index) {
 		this.name = name;
-		this.color = color;
+		this.colorStr = color;
+		this.color = convertColor(colorStr);
 		this.index = index;
 		cards = new LinkedList<Card>();
-
 	}
 
 	public Card disproveSuggestion(Card a, Card b, Card c) {
@@ -47,6 +55,18 @@ public class Player {
 		return accuse;
 	}
 
+	private Color convertColor(String strColor) {
+		Color color; 
+		try {     
+			// We can use reflection to convert the string to a color
+			java.lang.reflect.Field field = Class.forName("java.awt.Color").getField(strColor.trim().toUpperCase());     
+			color = (Color)field.get(null); } 
+		catch (Exception e) {  
+			color = null; // Not defined } 
+		}
+		return color;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -64,11 +84,12 @@ public class Player {
 	}
 
 	public String getColor() {
-		return color;
+		return colorStr;
 	}
 
 	public void setColor(String color) {
-		this.color = color;
+		this.colorStr = color;
+		this.color = convertColor(colorStr);
 	}
 
 	public int getIndex() {
@@ -77,5 +98,13 @@ public class Player {
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	public void draw(Graphics g, Dimension size, Point loc) {
+		//draw player circle
+		g.setColor(Color.BLACK);
+		g.drawOval(loc.x, loc.y, size.width, size.height);
+		g.setColor(color);
+		g.fillOval(loc.x, loc.y, size.width, size.height);
 	}
 }
