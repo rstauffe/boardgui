@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import cluePlayers.Card;
 import cluePlayers.ClueGame;
 
 public class GameFrame extends JFrame {
@@ -107,10 +108,12 @@ public class GameFrame extends JFrame {
 		//Card display panel
 		JPanel cardDisplayPanel = new JPanel();
 		//cardDisplayPanel.setLayout(new GridLayout(4, 1));
-		JLabel cardTitle = new JLabel("My Cards");
-		cardDisplayPanel.add(cardTitle);
+		cardDisplayPanel.setBorder(new TitledBorder(new EtchedBorder(), "My Cards"));
 		cardDisplayPanel.setPreferredSize(new Dimension(175, 580));
-		
+		cardDisplayPanel.setLayout(new GridLayout(0, 1));
+		for (Card c : game.getPlayer().getCards()) { //gets the player's cards
+			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
+		}
 		return cardDisplayPanel;
 	}
 	
