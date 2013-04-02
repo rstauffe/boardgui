@@ -16,6 +16,7 @@ public class ClueGame {
 	private LinkedList<Card> cards;
 	private LinkedList<Card> toDeal;
 	private LinkedList<Card> answer;
+	private LinkedList<Card> people, rooms, weapons;
 	private LinkedList<ComputerPlayer> comps;
 	private HumanPlayer player;
 	private int turn;
@@ -28,6 +29,9 @@ public class ClueGame {
 		board = new Board();
 		cards = new LinkedList<Card>();
 		answer = new LinkedList<Card>();
+		people = new LinkedList<Card>();
+		rooms = new LinkedList<Card>();
+		weapons = new LinkedList<Card>();
 		comps = new LinkedList<ComputerPlayer>();
 		rand = new Random();
 		numActive = 0;
@@ -38,6 +42,7 @@ public class ClueGame {
 			System.out.println(e.getMessage());
 			System.out.println("A loading error occurred. Please check the config files.");
 		}
+		sortList(people, weapons, rooms, cards);
 		toDeal = (LinkedList<Card>) cards.clone(); //error okay, known to be same type
 		dealCards();
 	}
@@ -227,6 +232,18 @@ public class ClueGame {
 		return board;
 	}
 	
+	public LinkedList<Card> getPeople() {
+		return people;
+	}
+
+	public LinkedList<Card> getRooms() {
+		return rooms;
+	}
+
+	public LinkedList<Card> getWeapons() {
+		return weapons;
+	}
+
 	public void drawPlayers(Graphics g) {
 		Dimension size = new Dimension(clueGUI.BoardPanel.BOARD_CELL_SIZE, clueGUI.BoardPanel.BOARD_CELL_SIZE);
 		player.draw(g, size, board.getDrawingPoint(player.getIndex()));

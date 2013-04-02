@@ -26,7 +26,7 @@ public class LoadingTests {
 	public void testHuman() { //tests loading human player
 		Player human = game.getPlayer();
 		assertEquals(human.getName(), "Professor Plum");
-		assertEquals(human.getColor(), "Purple");
+		assertEquals(human.getColor(), "Magenta"); //had to change color for contrast
 		assertEquals(human.getIndex(), 0*NUM_COLUMNS + 4);
 	}
 

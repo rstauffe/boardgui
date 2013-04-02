@@ -143,6 +143,8 @@ public class GameFrame extends JFrame {
 	//MAIN
 	public static void main(String[] args) {
 		GameFrame gui = new GameFrame();
+		DetectiveFrame notes = new DetectiveFrame();
 		gui.setVisible(true);
+		notes.setVisible(true);
 	}
 }
