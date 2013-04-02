@@ -23,7 +23,8 @@ import cluePlayers.ClueGame;
 
 public class GameFrame extends JFrame {
 	
-	private ClueGame game;
+	private static ClueGame game;
+	private DetectiveFrame notes;
 
 	public GameFrame() {
 		super();
@@ -33,6 +34,7 @@ public class GameFrame extends JFrame {
 		setLocation(20, 20);
 		//Create game and use game board to create board panel
 		game = new ClueGame();
+		notes = new DetectiveFrame(game); //enables notes to see same cards as game
 		BoardPanel boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		
@@ -59,6 +61,7 @@ public class GameFrame extends JFrame {
 		JLabel whoseTurnLabel = new JLabel("Whose Turn?");
 		whoseTurnPanel.add(whoseTurnLabel);
 		JTextField whoseTurn = new JTextField(15);
+		whoseTurn.setEditable(false); //shouldn't be changed by user
 		whoseTurnPanel.add(whoseTurn);
 		nPanel.add(whoseTurnPanel);
 		
@@ -122,6 +125,7 @@ public class GameFrame extends JFrame {
 		//create File menu
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("File"); 
+		menu.add(createShowNotesItem());
 		menu.add(createFileExitItem());
 		menuBar.add(menu);
 		return menuBar;
@@ -141,13 +145,23 @@ public class GameFrame extends JFrame {
 		item.addActionListener(new MenuItemListener());
 		return item;
 	}
+	
+	private JMenuItem createShowNotesItem() {
+		JMenuItem item = new JMenuItem("Show Notes");
+		class MenuItemListener implements ActionListener {
+			public void actionPerformed(ActionEvent e)
+			{
+				notes.setVisible(true);
+			}
+		}
+		item.addActionListener(new MenuItemListener());
+		return item;
+	}
 
 
 	//MAIN
 	public static void main(String[] args) {
 		GameFrame gui = new GameFrame();
-		DetectiveFrame notes = new DetectiveFrame();
 		gui.setVisible(true);
-		notes.setVisible(true);
 	}
 }

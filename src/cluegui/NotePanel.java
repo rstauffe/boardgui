@@ -12,9 +12,8 @@ import cluePlayers.Card;
 import cluePlayers.ClueGame;
 
 public class NotePanel extends JPanel {
-	private static ClueGame game = new ClueGame();
 	
-	public NotePanel(String type) {
+	public NotePanel(String type, ClueGame game) {
 		setLayout(new GridLayout(0, 2));
 		
 		switch(type) {

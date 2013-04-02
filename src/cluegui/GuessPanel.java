@@ -12,9 +12,8 @@ import cluePlayers.Card;
 import cluePlayers.ClueGame;
 
 public class GuessPanel extends JPanel {
-	private static ClueGame game = new ClueGame();
 	
-	public GuessPanel(String type) {
+	public GuessPanel(String type, ClueGame game) {
 		JComboBox list = new JComboBox();
 		
 		switch(type) {
