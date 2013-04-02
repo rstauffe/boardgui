@@ -29,7 +29,7 @@ public class GameFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Clue Game");
 		setSize(new Dimension(750, 600));
-		
+		setLocation(20, 20);
 		//Create game and use game board to create board panel
 		game = new ClueGame();
 		BoardPanel boardPanel = new BoardPanel(game);
