@@ -4,10 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -21,13 +26,25 @@ public class GameFrame extends JFrame {
 
 	public GameFrame() {
 		super();
-		game = new ClueGame();
-		BoardPanel board = new BoardPanel(game.getBoard());
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Clue Game");
 		setSize(new Dimension(750, 600));
 		
+		//Create game and use game board to create board panel
+		game = new ClueGame();
+		BoardPanel boardPanel = new BoardPanel(game.getBoard());
+		boardPanel.setPreferredSize(new Dimension(-1, 580));	
+		
+		this.add(boardPanel, BorderLayout.CENTER);
+		this.add(createBottomPanel(), BorderLayout.SOUTH);
+		this.add(createCardDisplayPanel(), BorderLayout.EAST);
+		this.setJMenuBar(createFileMenuBar());
+		this.validate();
+		this.pack();
+		this.repaint();
+	}
+	
+	private JPanel createBottomPanel() {
 		//Main panel, contains all components
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(2, 1));
@@ -83,6 +100,10 @@ public class GameFrame extends JFrame {
 		mainPanel.add(nPanel);
 		mainPanel.add(sPanel);
 		
+		return mainPanel;
+	}
+	
+	private JPanel createCardDisplayPanel() {
 		//Card display panel
 		JPanel cardDisplayPanel = new JPanel();
 		//cardDisplayPanel.setLayout(new GridLayout(4, 1));
@@ -90,19 +111,38 @@ public class GameFrame extends JFrame {
 		cardDisplayPanel.add(cardTitle);
 		cardDisplayPanel.setPreferredSize(new Dimension(175, 580));
 		
-		this.add(board, BorderLayout.CENTER);
-		this.add(mainPanel, BorderLayout.SOUTH);
-		this.add(cardDisplayPanel, BorderLayout.EAST);
-		this.validate();
-		
-		board.setPreferredSize(new Dimension(-1, 580));
-		this.pack();
-		this.repaint();
+		return cardDisplayPanel;
+	}
+	
+	private JMenuBar createFileMenuBar()
+	{
+		//create File menu
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("File"); 
+		menu.add(createFileExitItem());
+		menuBar.add(menu);
+		return menuBar;
 	}
 
+	private JMenuItem createFileExitItem()
+	{
+		//create Exit option that will be placed in the File menu
+		JMenuItem item = new JMenuItem("Exit");
+		//Exit the application when the button is pressed
+		class MenuItemListener implements ActionListener {
+			public void actionPerformed(ActionEvent e)
+			{
+				System.exit(0);
+			}
+		}
+		item.addActionListener(new MenuItemListener());
+		return item;
+	}
+
+
+	//MAIN
 	public static void main(String[] args) {
 		GameFrame gui = new GameFrame();
 		gui.setVisible(true);
 	}
-
 }
