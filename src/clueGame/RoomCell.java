@@ -10,12 +10,14 @@ public class RoomCell extends BoardCell {
 	public enum DoorDirection {UP, DOWN, LEFT, RIGHT, NONE};
 	private DoorDirection doorDirection;
 	private char roomInitial;
+	private boolean isLabelCell;
 	
 	//creates a room cell
 	public RoomCell(int row, int col, char roomInitial) {
 		super(row, col);
 		this.doorDirection = DoorDirection.NONE;
 		this.roomInitial = roomInitial;
+		this.isLabelCell = false;
 	}
 	
 	//creates a doorway cell
@@ -23,7 +25,16 @@ public class RoomCell extends BoardCell {
 		super(row, col);
 		this.doorDirection = doorDirection;
 		this.roomInitial = roomInitial;
+		this.isLabelCell = false;
 	}
+	
+	//creates a doorway cell
+		public RoomCell(int row, int col, char roomInitial, boolean isLabelCell) {
+			super(row, col);
+			this.doorDirection = DoorDirection.NONE;
+			this.roomInitial = roomInitial;
+			this.isLabelCell = isLabelCell;
+		}
 
 	@Override
 	public boolean isRoom() {
@@ -68,6 +79,13 @@ public class RoomCell extends BoardCell {
 				default:
 					break;
 			}
+		}
+		
+		//show label if applicable
+		if (isLabelCell) {
+			g.setColor(Color.BLACK);
+			int margin = clueGUI.BoardPanel.BOARD_CELL_SIZE / 2;
+			g.drawString("Test", loc.x, loc.y + margin);
 		}
 	}
 	

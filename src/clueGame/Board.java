@@ -94,6 +94,10 @@ public class Board {
 		        				//add door cell to board
 		        				cells.add(new RoomCell(cRow, cCol, roomChar, RoomCell.DoorDirection.DOWN));
 		        				break;
+		        			case 'T':
+		        				//this cell indicates a cell where the label text for the room should be shown
+		        				cells.add(new RoomCell(cRow, cCol, roomChar, true));
+		        				break;
 		        			default: 
 		        				//invalid door direction, lets make cell a regular room cell instead
 		        				cells.add(new RoomCell(cRow, cCol, roomChar));

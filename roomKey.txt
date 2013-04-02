@@ -3,7 +3,7 @@ B, Bedroom
 R, Library
 K, Kitchen
 P, Pool
-A, Bowling Alley
+A, Bar
 S, Study
 F, Foyer
 L, Lounge

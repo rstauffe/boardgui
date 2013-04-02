@@ -102,9 +102,9 @@ public class Player {
 	
 	public void draw(Graphics g, Dimension size, Point loc) {
 		//draw player circle
-		g.setColor(Color.BLACK);
-		g.drawOval(loc.x, loc.y, size.width, size.height);
 		g.setColor(color);
 		g.fillOval(loc.x, loc.y, size.width, size.height);
+		g.setColor(Color.BLACK);
+		g.drawOval(loc.x, loc.y, size.width, size.height);
 	}
 }
