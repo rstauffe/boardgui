@@ -1,5 +1,8 @@
 package clueGame;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -336,4 +339,25 @@ public class Board {
 		return adjacencies.get(cell);
 	}
 
+	public void drawBoard(Graphics g) {
+		//paint the board cells
+		Dimension size = new Dimension(30, 30);
+		Point loc = new Point(0, 0);
+		int row = 0;
+		int col = 0;
+		for (BoardCell cell: cells) {
+			loc.x = col * size.width;
+			loc.y = row * size.height;
+			
+			cell.draw(g, size, loc);
+			
+			//increment column
+			col++;
+			if (col >= numColumns) {
+				//column exceeds max, go to next row
+				col = 0;
+				row++;
+			}
+		}
+	}
 }

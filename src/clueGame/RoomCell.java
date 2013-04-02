@@ -1,6 +1,9 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 
 public class RoomCell extends BoardCell {
 
@@ -41,9 +44,32 @@ public class RoomCell extends BoardCell {
 	}
 
 	@Override
-	public void draw(Graphics g) {
+	public void draw(Graphics g, Dimension size, Point loc) {
 		//draw room cell
+		g.setColor(Color.GRAY);
+		g.fillRect(loc.x, loc.y, size.width, size.height);
 		
+		//draw a doorway if applicable
+		if (isDoorway()) {
+			g.setColor(Color.BLUE);
+			int doorPixels = 5; //width or height of doorway
+			switch (doorDirection) {
+				case UP: 
+					g.fillRect(loc.x, loc.y, size.width, doorPixels);
+					break;
+				case DOWN: 
+					g.fillRect(loc.x, loc.y + size.height - doorPixels, size.width, doorPixels);
+					break;
+				case LEFT: 
+					g.fillRect(loc.x, loc.y, doorPixels, size.height);
+					break;
+				case RIGHT: 
+					g.fillRect(loc.x + size.width - doorPixels, loc.y, doorPixels, size.height);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 	
 }
