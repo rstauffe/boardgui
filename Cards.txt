@@ -9,7 +9,7 @@ Bedroom, Room
 Library, Room
 Kitchen, Room
 Pool, Room
-Bowling Alley, Room
+Bar, Room
 Study, Room
 Foyer, Room
 Lounge, Room
