@@ -96,7 +96,7 @@ public class Board {
 		        				break;
 		        			case 'T':
 		        				//this cell indicates a cell where the label text for the room should be shown
-		        				cells.add(new RoomCell(cRow, cCol, roomChar, true));
+		        				cells.add(new RoomCell(cRow, cCol, roomChar, rooms.get(roomChar)));
 		        				break;
 		        			default: 
 		        				//invalid door direction, lets make cell a regular room cell instead
@@ -366,10 +366,11 @@ public class Board {
 		Point loc = new Point(0, 0);
 		int row = 0;
 		int col = 0;
-		for (BoardCell cell: cells) {
-			loc.x = col * size.width;
-			loc.y = row * size.height;
-			
+		
+		//for (int i = 0; i < cells.size(); i++) {
+		for (int i = cells.size() - 1; i >= 0; i--) {
+			BoardCell cell = cells.get(i);
+			loc = getDrawingPoint(cell.getRow(), cell.getCol());
 			cell.draw(g, size, loc);
 			
 			//increment column

@@ -10,6 +10,7 @@ public class RoomCell extends BoardCell {
 	public enum DoorDirection {UP, DOWN, LEFT, RIGHT, NONE};
 	private DoorDirection doorDirection;
 	private char roomInitial;
+	private String roomName;
 	private boolean isLabelCell;
 	
 	//creates a room cell
@@ -17,7 +18,17 @@ public class RoomCell extends BoardCell {
 		super(row, col);
 		this.doorDirection = DoorDirection.NONE;
 		this.roomInitial = roomInitial;
+		this.roomName = null;
 		this.isLabelCell = false;
+	}
+	
+	//creates a room cell
+	public RoomCell(int row, int col, char roomInitial, String roomName) {
+		super(row, col);
+		this.doorDirection = DoorDirection.NONE;
+		this.roomInitial = roomInitial;
+		this.roomName = roomName;
+		this.isLabelCell = true;
 	}
 	
 	//creates a doorway cell
@@ -25,16 +36,9 @@ public class RoomCell extends BoardCell {
 		super(row, col);
 		this.doorDirection = doorDirection;
 		this.roomInitial = roomInitial;
+		this.roomName = null;
 		this.isLabelCell = false;
 	}
-	
-	//creates a doorway cell
-		public RoomCell(int row, int col, char roomInitial, boolean isLabelCell) {
-			super(row, col);
-			this.doorDirection = DoorDirection.NONE;
-			this.roomInitial = roomInitial;
-			this.isLabelCell = isLabelCell;
-		}
 
 	@Override
 	public boolean isRoom() {
@@ -85,7 +89,7 @@ public class RoomCell extends BoardCell {
 		if (isLabelCell) {
 			g.setColor(Color.BLACK);
 			int margin = clueGUI.BoardPanel.BOARD_CELL_SIZE / 2;
-			g.drawString("Test", loc.x, loc.y + margin);
+			g.drawString(roomName, loc.x + margin, loc.y + margin);
 		}
 	}
 	
