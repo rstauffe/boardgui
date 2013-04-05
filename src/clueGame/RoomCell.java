@@ -87,9 +87,9 @@ public class RoomCell extends BoardCell {
 		
 		//show label if applicable
 		if (isLabelCell) {
-			g.setColor(Color.BLACK);
+			g.setColor(Color.BLUE);
 			int margin = clueGUI.BoardPanel.BOARD_CELL_SIZE / 2;
-			g.drawString(roomName, loc.x + margin, loc.y + margin);
+			g.drawString(roomName.toUpperCase(), loc.x + margin, loc.y + margin);
 		}
 	}
 	

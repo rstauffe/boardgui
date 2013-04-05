@@ -23,6 +23,7 @@ public class ClueGame {
 	private Board board;
 	private Random rand;
 	private int numActive; //number of currently active players
+	private int roll;
 
 	@SuppressWarnings("unchecked")
 	public ClueGame() {
@@ -35,6 +36,8 @@ public class ClueGame {
 		comps = new LinkedList<ComputerPlayer>();
 		rand = new Random();
 		numActive = 0;
+		turn = -1;
+		roll = -1;
 		try {
 			loadCards("Cards.txt"); //loads cards from file
 			loadPlayers("Players.txt"); //loads players from file
@@ -179,6 +182,19 @@ public class ClueGame {
 			}
 		}
 	}
+	
+	public boolean nextTurn() {
+		turn++;
+		if (turn > numActive)
+			turn = 0;
+		Player cPlayer = getCurrentPlayer();
+		
+		roll = rand.nextInt(6);
+		
+		board.startTargets(cPlayer.getIndex(), roll);
+		
+		return (turn == 0);
+	}
 
 	public LinkedList<Card> getCards() {
 		return cards;
@@ -210,6 +226,21 @@ public class ClueGame {
 
 	public void setTurn(int turn) {
 		this.turn = turn;
+	}
+	
+	public Player getCurrentPlayer() {
+		return getPlayerAt(turn);
+	}
+	
+	public Player getPlayerAt(int index) {
+		if (index == 0)
+			return player;
+		else
+			return comps.get(index - 1);
+	}
+	
+	public int getRoll() {
+		return roll;
 	}
 
 	public LinkedList<Card> getToDeal() {

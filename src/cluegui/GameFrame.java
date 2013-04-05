@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -23,25 +24,34 @@ import cluePlayers.ClueGame;
 
 public class GameFrame extends JFrame {
 	
-	private static ClueGame game;
+	private ClueGame game;
 	private DetectiveFrame notes;
+	
+	//scope these components higher so that they can easily have their properties changes during gameplay
+	private JTextField whoseTurn, dieRoll, guessText, guessResultText;
+	private JPanel cardDisplayPanel;
 
 	public GameFrame() {
 		super();
+		//set frame defaults
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Clue Game");
 		setSize(new Dimension(750, 600));
 		setLocation(20, 20);
+		
 		//Create game and use game board to create board panel
 		game = new ClueGame();
 		notes = new DetectiveFrame(game); //enables notes to see same cards as game
 		BoardPanel boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		
+		//create and add components to frame
 		this.add(boardPanel, BorderLayout.CENTER);
 		this.add(createBottomPanel(), BorderLayout.SOUTH);
 		this.add(createCardDisplayPanel(), BorderLayout.EAST);
 		this.setJMenuBar(createFileMenuBar());
+		
+		//refresh frame
 		this.validate();
 		this.pack();
 		this.repaint();
@@ -60,7 +70,7 @@ public class GameFrame extends JFrame {
 		whoseTurnPanel.setLayout(new GridLayout(2, 0));
 		JLabel whoseTurnLabel = new JLabel("Whose Turn?");
 		whoseTurnPanel.add(whoseTurnLabel);
-		JTextField whoseTurn = new JTextField(15);
+		whoseTurn = new JTextField(15);
 		whoseTurn.setEditable(false); //shouldn't be changed by user
 		whoseTurnPanel.add(whoseTurn);
 		nPanel.add(whoseTurnPanel);
@@ -73,7 +83,7 @@ public class GameFrame extends JFrame {
 		
 		//Die roll
 		JPanel dieRollPanel = new JPanel();
-		JTextField dieRoll = new JTextField(2);
+		dieRoll = new JTextField(2);
 		dieRoll.setEditable(false);  //Can't edit this field
 		JLabel dieRollLabel = new JLabel("Roll:");
 		dieRollPanel.add(dieRollLabel);
@@ -83,7 +93,7 @@ public class GameFrame extends JFrame {
 		
 		//Guess panel
 		JPanel guessPanel = new JPanel();
-		JTextField guessText = new JTextField(20);
+		guessText = new JTextField(20);
 		guessText.setEditable(false);  //Can't edit this field
 		JLabel guess = new JLabel("Guess:");
 		guessPanel.add(guess);
@@ -93,7 +103,7 @@ public class GameFrame extends JFrame {
 		
 		//Guess Result panel
 		JPanel guessResultPanel = new JPanel();
-		JTextField guessResultText = new JTextField(20);
+		guessResultText = new JTextField(20);
 		guessResultText.setEditable(false);  //Can't edit this field
 		JLabel guessResult = new JLabel("Guess Result:");
 		guessResultPanel.add(guessResult);
@@ -109,14 +119,11 @@ public class GameFrame extends JFrame {
 	
 	private JPanel createCardDisplayPanel() {
 		//Card display panel
-		JPanel cardDisplayPanel = new JPanel();
+		cardDisplayPanel = new JPanel();
 		//cardDisplayPanel.setLayout(new GridLayout(4, 1));
 		cardDisplayPanel.setBorder(new TitledBorder(new EtchedBorder(), "My Cards"));
 		cardDisplayPanel.setPreferredSize(new Dimension(175, 580));
 		cardDisplayPanel.setLayout(new GridLayout(0, 1));
-		for (Card c : game.getPlayer().getCards()) { //gets the player's cards
-			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
-		}
 		return cardDisplayPanel;
 	}
 	
@@ -157,11 +164,49 @@ public class GameFrame extends JFrame {
 		item.addActionListener(new MenuItemListener());
 		return item;
 	}
+	
+	/* GAMEPLAY FUNCTIONS */
+	
+	public void startGame() {
+		//show player cards in panel
+		for (Card c : game.getPlayer().getCards()) { //gets the player's cards
+			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
+		}
+		
+		//show player which character they will be
+		cluePlayers.Player hPlayer = game.getPlayer();
+		JOptionPane.showMessageDialog(this, "You are " + hPlayer.getName() + " (" + hPlayer.getColor() + ")" + ". " +
+								"Press Next Player to begin play.", "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	private void setWhoseTurn() {
+		//set the text in the Whose Turn? box to the current player
+		cluePlayers.Player cPlayer = game.getCurrentPlayer();
+		whoseTurn.setText(cPlayer.getName());
+	}
+	
+	private void setRoll() {
+		//set the text in the Roll box to the last roll
+		int roll = game.getRoll();
+		dieRoll.setText("" + roll);
+	}
+	
+	private void nextPlayer() {
+		boolean isHumanTurn = game.nextTurn();
+		
+		setWhoseTurn();
+		setRoll();
+		
+		if (isHumanTurn) {
+			//show board with possible move locations
+		}
+	}
 
 
 	//MAIN
 	public static void main(String[] args) {
-		GameFrame gui = new GameFrame();
-		gui.setVisible(true);
+		GameFrame gameGUI = new GameFrame();
+		gameGUI.setVisible(true);
+		gameGUI.startGame();
 	}
 }
