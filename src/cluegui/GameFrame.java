@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +39,8 @@ public class GameFrame extends JFrame {
 	//scope these components higher so that they can easily have their properties changes during gameplay
 	private JTextField whoseTurn, dieRoll, guessText, guessResultText;
 	private JPanel cardDisplayPanel;
-	private BoardPanel boardPanel;
+	private boolean clicked; //used for mouse readings
+	private int x, y;
 
 	public GameFrame() {
 		super();
@@ -50,9 +53,35 @@ public class GameFrame extends JFrame {
 		//Create game and use game board to create board panel
 		game = new ClueGame();
 		notes = new DetectiveFrame(game); //enables notes to see same cards as game
-		boardPanel = new BoardPanel(game);
+		BoardPanel boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		
+		class MListener implements MouseListener {
+			public void mousePressed(MouseEvent me) {
+			}
+			
+			public void mouseClicked(MouseEvent me) {	
+			}
+			
+			public void mouseReleased(MouseEvent me) {
+				Point clickPt = me.getPoint();
+				x = (int) (clickPt.getY() / BoardPanel.BOARD_CELL_SIZE); //gets row
+				y = (int) (clickPt.getX() / BoardPanel.BOARD_CELL_SIZE); //gets column
+				clicked = true;
+				System.out.println(clicked);
+				System.out.println(x + ", " + y);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent me) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent me) {				
+			}
+		}
+		
+		boardPanel.addMouseListener(new MListener());
 		//create and add components to frame
 		this.add(boardPanel, BorderLayout.CENTER);
 		this.add(createBottomPanel(), BorderLayout.SOUTH);
@@ -201,12 +230,12 @@ public class GameFrame extends JFrame {
 			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
 		}
 		
-		nextPlayer();
-		
 		//show player which character they will be
 		cluePlayers.Player hPlayer = game.getPlayer();
 		JOptionPane.showMessageDialog(this, "You are " + hPlayer.getName() + " (" + hPlayer.getColor() + ")" + ". " +
 								"Press Next Player to begin play.", "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
+		
+		nextPlayer();
 	}
 	
 	private void setWhoseTurn() {
@@ -225,13 +254,12 @@ public class GameFrame extends JFrame {
 		setWhoseTurn();
 		setRoll();
 		if (isHuman) {
+			game.setPlayerMoved(false);
 			this.repaint();
 			Set<BoardCell> targets = game.getBoard().getTargets();
 			while(game.isPlayerMoved() == false) { //keeps checking for clicks until a move is made
-				Point clickPt = boardPanel.getClickPt();
-				if (clickPt != null) {
-					int x = boardPanel.getX();
-					int y = boardPanel.getY();
+				if (clicked == true) {
+					//System.out.println("Possible target: " + x + ", " + y);
 					int index = game.getBoard().calcIndex(x, y);
 					if (targets.contains(game.getBoard().getCellAt(index))) {
 						game.getPlayer().setIndex(index);
@@ -239,10 +267,10 @@ public class GameFrame extends JFrame {
 						game.setPlayerMoved(true);
 					} else {
 						//JOptionPane.showMessageDialog(null, "That is not a valid move location!");
-						clickPt = null;
+						clicked = false;
 					}
 				}
-				clickPt = null;
+				clicked = false;
 			}
 		}
 		this.repaint();

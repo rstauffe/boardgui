@@ -189,17 +189,20 @@ public class ClueGame {
 		turn++;
 		if (turn > numActive - 1) { //max turn is players - 1
 			turn = 0;
-			setPlayerMoved(false); //senses if player has moved, reset on player turn
+			//setPlayerMoved(false); //senses if player has moved, reset on player turn
 		}
+		System.out.println(turn + "");
 		Player cPlayer = getCurrentPlayer();
 		
 		roll = rand.nextInt(6) + 1;
-		
+		System.out.println("Rolled");
 		if (turn > 0) { //computer's move
+			System.out.println("AI move");
 			ComputerPlayer ai = comps.get(turn - 1);
 			ai.setIndex(ai.pickLocation(roll, board));
 			board.getTargets().clear(); //dumps target list after move to ensure no draw of possibles
 		} else {
+			System.out.println("Human");
 			board.startTargets(cPlayer.getIndex(), roll); //generates target list for use in GameFrame
 		}
 		
