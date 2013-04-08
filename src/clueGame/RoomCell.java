@@ -93,4 +93,23 @@ public class RoomCell extends BoardCell {
 		}
 	}
 	
+	public void draw2(Graphics g, Dimension size, Point loc) { //used for target drawing, just draws doorway
+		g.setColor(Color.BLUE);
+		switch (doorDirection) {
+		case UP: 
+			g.fillRect(loc.x, loc.y, size.width, clueGUI.BoardPanel.DOOR_SIZE);
+			break;
+		case DOWN: 
+			g.fillRect(loc.x, loc.y + size.height - clueGUI.BoardPanel.DOOR_SIZE, size.width, clueGUI.BoardPanel.DOOR_SIZE);
+			break;
+		case LEFT: 
+			g.fillRect(loc.x, loc.y, clueGUI.BoardPanel.DOOR_SIZE, size.height);
+			break;
+		case RIGHT: 
+			g.fillRect(loc.x + size.width - clueGUI.BoardPanel.DOOR_SIZE, loc.y, clueGUI.BoardPanel.DOOR_SIZE, size.height);
+			break;
+		default:
+			break;
+		}
+	}
 }

@@ -3,7 +3,9 @@ package clueGUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
@@ -198,8 +200,7 @@ public class GameFrame extends JFrame {
 			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
 		}
 		
-		setWhoseTurn();
-		setRoll();
+		nextPlayer();
 		
 		//show player which character they will be
 		cluePlayers.Player hPlayer = game.getPlayer();
@@ -223,12 +224,13 @@ public class GameFrame extends JFrame {
 		setWhoseTurn();
 		setRoll();
 		if (isHuman) {
+			this.repaint();
 			Set<BoardCell> targets = game.getBoard().getTargets();
+			
 		}
 		this.repaint();
 	}
-
-
+	
 	//MAIN
 	public static void main(String[] args) {
 		GameFrame gameGUI = new GameFrame();

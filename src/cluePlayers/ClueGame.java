@@ -37,7 +37,7 @@ public class ClueGame {
 		comps = new LinkedList<ComputerPlayer>();
 		rand = new Random();
 		numActive = 0;
-		turn = 0;
+		turn = -1;
 		playerMoved = false;
 		roll = rand.nextInt(6) + 1;
 		try {
@@ -198,8 +198,9 @@ public class ClueGame {
 		if (turn > 0) { //computer's move
 			ComputerPlayer ai = comps.get(turn - 1);
 			ai.setIndex(ai.pickLocation(roll, board));
+			board.getTargets().clear(); //dumps target list after move to ensure no draw of possibles
 		} else {
-			board.startTargets(cPlayer.getIndex(), roll);
+			board.startTargets(cPlayer.getIndex(), roll); //generates target list for use in GameFrame
 		}
 		
 		return (turn == 0);
