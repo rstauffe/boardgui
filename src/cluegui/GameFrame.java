@@ -234,8 +234,6 @@ public class GameFrame extends JFrame {
 		cluePlayers.Player hPlayer = game.getPlayer();
 		JOptionPane.showMessageDialog(this, "You are " + hPlayer.getName() + " (" + hPlayer.getColor() + ")" + ". " +
 				"Press Next Player to begin play.", "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
-
-		nextPlayer();
 	}
 
 	private void setWhoseTurn() {
