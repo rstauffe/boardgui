@@ -70,7 +70,7 @@ public class GameFrame extends JFrame {
 						game.getBoard().getTargets().clear();
 						game.setPlayerMoved(true);
 					} else {
-						//JOptionPane.showMessageDialog(null, "That is not a valid move location!");
+						JOptionPane.showMessageDialog(null, "That is not a valid move location!");
 					}
 					boardPanel.repaint();
 				} else {
