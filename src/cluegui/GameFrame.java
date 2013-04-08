@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import cluePlayers.Card;
 import cluePlayers.ClueGame;
@@ -77,7 +79,25 @@ public class GameFrame extends JFrame {
 		
 		//Next Player and Make Accusation buttons
 		JButton nextPlayer = new JButton("Next Player");
+		
+		class TurnListener implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				if (game.isPlayerMoved() == true) {
+					game.nextTurn();
+				}
+			}
+		}
+		
+		nextPlayer.addActionListener(new TurnListener());
 		JButton makeAccusation = new JButton("Make Accusation");
+		
+		class AccuseListener implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		}
+		
+		makeAccusation.addActionListener(new AccuseListener());
 		nPanel.add(nextPlayer);
 		nPanel.add(makeAccusation);
 		
@@ -173,6 +193,10 @@ public class GameFrame extends JFrame {
 			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
 		}
 		
+		game.nextTurn();
+		setWhoseTurn();
+		setRoll();
+		
 		//show player which character they will be
 		cluePlayers.Player hPlayer = game.getPlayer();
 		JOptionPane.showMessageDialog(this, "You are " + hPlayer.getName() + " (" + hPlayer.getColor() + ")" + ". " +
@@ -181,8 +205,7 @@ public class GameFrame extends JFrame {
 	
 	private void setWhoseTurn() {
 		//set the text in the Whose Turn? box to the current player
-		cluePlayers.Player cPlayer = game.getCurrentPlayer();
-		whoseTurn.setText(cPlayer.getName());
+		whoseTurn.setText(game.getPlayerAt(game.getTurn()).getName()); //grabs player name for turn number
 	}
 	
 	private void setRoll() {

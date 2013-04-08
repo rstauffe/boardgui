@@ -24,6 +24,7 @@ public class ClueGame {
 	private Random rand;
 	private int numActive; //number of currently active players
 	private int roll;
+	private boolean playerMoved;
 
 	@SuppressWarnings("unchecked")
 	public ClueGame() {
@@ -37,6 +38,7 @@ public class ClueGame {
 		rand = new Random();
 		numActive = 0;
 		turn = -1;
+		playerMoved = false;
 		roll = -1;
 		try {
 			loadCards("Cards.txt"); //loads cards from file
@@ -185,8 +187,10 @@ public class ClueGame {
 	
 	public boolean nextTurn() {
 		turn++;
-		if (turn > numActive)
+		if (turn > numActive) {
 			turn = 0;
+			setPlayerMoved(false);
+		}
 		Player cPlayer = getCurrentPlayer();
 		
 		roll = rand.nextInt(6);
@@ -273,6 +277,14 @@ public class ClueGame {
 
 	public LinkedList<Card> getWeapons() {
 		return weapons;
+	}
+
+	public boolean isPlayerMoved() {
+		return playerMoved;
+	}
+
+	public void setPlayerMoved(boolean playerMoved) {
+		this.playerMoved = playerMoved;
 	}
 
 	public void drawPlayers(Graphics g) {
