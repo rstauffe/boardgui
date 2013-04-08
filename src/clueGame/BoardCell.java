@@ -63,7 +63,7 @@ public abstract class BoardCell {
 
 	public abstract void draw(Graphics g, Dimension size, Point loc);
 
-	public void drawTarget(Graphics g, Dimension size, Point loc) {
+	public void drawTarget(Graphics g, Dimension size, Point loc) { //draws cell if it is a potential target
 		if (isRoom()) {
 			g.setColor(Color.BLUE);
 			g.fillRect(loc.x, loc.y, size.width, size.height);

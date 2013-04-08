@@ -37,6 +37,7 @@ public class GameFrame extends JFrame {
 	//scope these components higher so that they can easily have their properties changes during gameplay
 	private JTextField whoseTurn, dieRoll, guessText, guessResultText;
 	private JPanel cardDisplayPanel;
+	private BoardPanel boardPanel;
 
 	public GameFrame() {
 		super();
@@ -49,7 +50,7 @@ public class GameFrame extends JFrame {
 		//Create game and use game board to create board panel
 		game = new ClueGame();
 		notes = new DetectiveFrame(game); //enables notes to see same cards as game
-		BoardPanel boardPanel = new BoardPanel(game);
+		boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		
 		//create and add components to frame
@@ -226,10 +227,27 @@ public class GameFrame extends JFrame {
 		if (isHuman) {
 			this.repaint();
 			Set<BoardCell> targets = game.getBoard().getTargets();
-			
+			while(game.isPlayerMoved() == false) { //keeps checking for clicks until a move is made
+				Point clickPt = boardPanel.getClickPt();
+				if (clickPt != null) {
+					int x = boardPanel.getX();
+					int y = boardPanel.getY();
+					int index = game.getBoard().calcIndex(x, y);
+					if (targets.contains(game.getBoard().getCellAt(index))) {
+						game.getPlayer().setIndex(index);
+						game.getBoard().getTargets().clear();
+						game.setPlayerMoved(true);
+					} else {
+						//JOptionPane.showMessageDialog(null, "That is not a valid move location!");
+						clickPt = null;
+					}
+				}
+				clickPt = null;
+			}
 		}
 		this.repaint();
 	}
+
 	
 	//MAIN
 	public static void main(String[] args) {
