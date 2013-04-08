@@ -189,7 +189,7 @@ public class ClueGame {
 		turn++;
 		if (turn > numActive - 1) { //max turn is players - 1
 			turn = 0;
-			//setPlayerMoved(false); //senses if player has moved, reset on player turn
+			setPlayerMoved(false); //senses if player has moved, reset on player turn
 		}
 		System.out.println(turn + "");
 		Player cPlayer = getCurrentPlayer();

@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashSet;
@@ -32,15 +33,15 @@ import cluePlayers.Card;
 import cluePlayers.ClueGame;
 
 public class GameFrame extends JFrame {
-	
+
 	private ClueGame game;
 	private DetectiveFrame notes;
-	
+
 	//scope these components higher so that they can easily have their properties changes during gameplay
 	private JTextField whoseTurn, dieRoll, guessText, guessResultText;
 	private JPanel cardDisplayPanel;
-	private boolean clicked; //used for mouse readings
 	private int x, y;
+	private BoardPanel boardPanel;
 
 	public GameFrame() {
 		super();
@@ -49,51 +50,50 @@ public class GameFrame extends JFrame {
 		setTitle("Clue Game");
 		setSize(new Dimension(750, 600));
 		setLocation(20, 20);
-		
+
 		//Create game and use game board to create board panel
 		game = new ClueGame();
 		notes = new DetectiveFrame(game); //enables notes to see same cards as game
-		BoardPanel boardPanel = new BoardPanel(game);
+		boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
-		
-		class MListener implements MouseListener {
-			public void mousePressed(MouseEvent me) {
-			}
-			
-			public void mouseClicked(MouseEvent me) {	
-			}
-			
+		boardPanel.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent me) {
 				Point clickPt = me.getPoint();
 				x = (int) (clickPt.getY() / BoardPanel.BOARD_CELL_SIZE); //gets row
 				y = (int) (clickPt.getX() / BoardPanel.BOARD_CELL_SIZE); //gets column
-				clicked = true;
-				System.out.println(clicked);
 				System.out.println(x + ", " + y);
+				if (game.getTurn() == 0 && game.isPlayerMoved() == false) {
+					Set<BoardCell> targets = game.getBoard().getTargets();
+					int index = game.getBoard().calcIndex(x, y);
+					if (targets.contains(game.getBoard().getCellAt(index))) {
+						game.getPlayer().setIndex(index);
+						game.getBoard().getTargets().clear();
+						game.setPlayerMoved(true);
+					} else {
+						//JOptionPane.showMessageDialog(null, "That is not a valid move location!");
+					}
+					boardPanel.repaint();
+				} else {
+					if (game.getTurn() != 0) {
+						JOptionPane.showMessageDialog(null, "It's not your turn!");
+					} else {
+						JOptionPane.showMessageDialog(null, "You can't move right now!");
+					}
+				}
 			}
-
-			@Override
-			public void mouseEntered(MouseEvent me) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent me) {				
-			}
-		}
-		
-		boardPanel.addMouseListener(new MListener());
+		});
 		//create and add components to frame
 		this.add(boardPanel, BorderLayout.CENTER);
 		this.add(createBottomPanel(), BorderLayout.SOUTH);
 		this.add(createCardDisplayPanel(), BorderLayout.EAST);
 		this.setJMenuBar(createFileMenuBar());
-		
+
 		//refresh frame
 		this.validate();
 		this.pack();
 		this.repaint();
 	}
-	
+
 	private JPanel createBottomPanel() {
 		//Main panel, contains all components
 		JPanel mainPanel = new JPanel();
@@ -101,7 +101,7 @@ public class GameFrame extends JFrame {
 		JPanel sPanel = new JPanel();
 		JPanel nPanel = new JPanel();
 		//nPanel.setLayout(new GridLayout(1, 3));
-		
+
 		//Whose Turn? section
 		JPanel whoseTurnPanel = new JPanel();
 		whoseTurnPanel.setLayout(new GridLayout(2, 0));
@@ -111,10 +111,10 @@ public class GameFrame extends JFrame {
 		whoseTurn.setEditable(false); //shouldn't be changed by user
 		whoseTurnPanel.add(whoseTurn);
 		nPanel.add(whoseTurnPanel);
-		
+
 		//Next Player and Make Accusation buttons
 		JButton nextPlayer = new JButton("Next Player");
-		
+
 		class TurnListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				if (game.isPlayerMoved() == false) {
@@ -124,20 +124,20 @@ public class GameFrame extends JFrame {
 				}
 			}
 		}
-		
+
 		nextPlayer.addActionListener(new TurnListener());
 		JButton makeAccusation = new JButton("Make Accusation");
-		
+
 		class AccuseListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				//need to write accusation logic
 			}
 		}
-		
+
 		makeAccusation.addActionListener(new AccuseListener());
 		nPanel.add(nextPlayer);
 		nPanel.add(makeAccusation);
-		
+
 		//Die roll
 		JPanel dieRollPanel = new JPanel();
 		dieRoll = new JTextField(2);
@@ -147,7 +147,7 @@ public class GameFrame extends JFrame {
 		dieRollPanel.add(dieRoll);
 		dieRollPanel.setBorder(new TitledBorder(new EtchedBorder(), "Die Roll"));
 		sPanel.add(dieRollPanel);
-		
+
 		//Guess panel
 		JPanel guessPanel = new JPanel();
 		guessText = new JTextField(20);
@@ -157,7 +157,7 @@ public class GameFrame extends JFrame {
 		guessPanel.add(guessText);
 		guessPanel.setBorder(new TitledBorder(new EtchedBorder(), "Guess"));
 		sPanel.add(guessPanel);
-		
+
 		//Guess Result panel
 		JPanel guessResultPanel = new JPanel();
 		guessResultText = new JTextField(20);
@@ -167,13 +167,13 @@ public class GameFrame extends JFrame {
 		guessResultPanel.add(guessResultText);
 		guessResultPanel.setBorder(new TitledBorder(new EtchedBorder(), "Guess Result"));
 		sPanel.add(guessResultPanel);
-		
+
 		mainPanel.add(nPanel);
 		mainPanel.add(sPanel);
-		
+
 		return mainPanel;
 	}
-	
+
 	private JPanel createCardDisplayPanel() {
 		//Card display panel
 		cardDisplayPanel = new JPanel();
@@ -183,7 +183,7 @@ public class GameFrame extends JFrame {
 		cardDisplayPanel.setLayout(new GridLayout(0, 1));
 		return cardDisplayPanel;
 	}
-	
+
 	private JMenuBar createFileMenuBar()
 	{
 		//create File menu
@@ -209,7 +209,7 @@ public class GameFrame extends JFrame {
 		item.addActionListener(new MenuItemListener());
 		return item;
 	}
-	
+
 	private JMenuItem createShowNotesItem() {
 		JMenuItem item = new JMenuItem("Show Notes");
 		class MenuItemListener implements ActionListener {
@@ -221,62 +221,42 @@ public class GameFrame extends JFrame {
 		item.addActionListener(new MenuItemListener());
 		return item;
 	}
-	
+
 	/* GAMEPLAY FUNCTIONS */
-	
+
 	public void startGame() {
 		//show player cards in panel
 		for (Card c : game.getPlayer().getCards()) { //gets the player's cards
 			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
 		}
-		
+
 		//show player which character they will be
 		cluePlayers.Player hPlayer = game.getPlayer();
 		JOptionPane.showMessageDialog(this, "You are " + hPlayer.getName() + " (" + hPlayer.getColor() + ")" + ". " +
-								"Press Next Player to begin play.", "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
-		
+				"Press Next Player to begin play.", "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
+
 		nextPlayer();
 	}
-	
+
 	private void setWhoseTurn() {
 		//set the text in the Whose Turn? box to the current player
 		whoseTurn.setText(game.getCurrentPlayer().getName()); //grabs player name
 	}
-	
+
 	private void setRoll() {
 		//set the text in the Roll box to the last roll
 		int roll = game.getRoll();
 		dieRoll.setText("" + roll);
 	}
-	
+
 	private void nextPlayer() {
-		boolean isHuman = game.nextTurn();
+		game.nextTurn();
 		setWhoseTurn();
 		setRoll();
-		if (isHuman) {
-			game.setPlayerMoved(false);
-			this.repaint();
-			Set<BoardCell> targets = game.getBoard().getTargets();
-			while(game.isPlayerMoved() == false) { //keeps checking for clicks until a move is made
-				if (clicked == true) {
-					//System.out.println("Possible target: " + x + ", " + y);
-					int index = game.getBoard().calcIndex(x, y);
-					if (targets.contains(game.getBoard().getCellAt(index))) {
-						game.getPlayer().setIndex(index);
-						game.getBoard().getTargets().clear();
-						game.setPlayerMoved(true);
-					} else {
-						//JOptionPane.showMessageDialog(null, "That is not a valid move location!");
-						clicked = false;
-					}
-				}
-				clicked = false;
-			}
-		}
 		this.repaint();
 	}
 
-	
+
 	//MAIN
 	public static void main(String[] args) {
 		GameFrame gameGUI = new GameFrame();
