@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,6 +23,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import clueGame.BoardCell;
 import cluePlayers.Card;
 import cluePlayers.ClueGame;
 
@@ -82,8 +85,10 @@ public class GameFrame extends JFrame {
 		
 		class TurnListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-				if (game.isPlayerMoved() == true) {
-					game.nextTurn();
+				if (game.isPlayerMoved() == false) {
+					JOptionPane.showMessageDialog(null, "You must make a move before you complete your turn!");
+				} else {
+					nextPlayer();
 				}
 			}
 		}
@@ -93,7 +98,7 @@ public class GameFrame extends JFrame {
 		
 		class AccuseListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-				
+				//need to write accusation logic
 			}
 		}
 		
@@ -193,7 +198,6 @@ public class GameFrame extends JFrame {
 			cardDisplayPanel.add(new JLabel(c.getName() + " - " + c.getType()));
 		}
 		
-		game.nextTurn();
 		setWhoseTurn();
 		setRoll();
 		
@@ -205,7 +209,7 @@ public class GameFrame extends JFrame {
 	
 	private void setWhoseTurn() {
 		//set the text in the Whose Turn? box to the current player
-		whoseTurn.setText(game.getPlayerAt(game.getTurn()).getName()); //grabs player name for turn number
+		whoseTurn.setText(game.getCurrentPlayer().getName()); //grabs player name
 	}
 	
 	private void setRoll() {
@@ -215,14 +219,13 @@ public class GameFrame extends JFrame {
 	}
 	
 	private void nextPlayer() {
-		boolean isHumanTurn = game.nextTurn();
-		
+		boolean isHuman = game.nextTurn();
 		setWhoseTurn();
 		setRoll();
-		
-		if (isHumanTurn) {
-			//show board with possible move locations
+		if (isHuman) {
+			Set<BoardCell> targets = game.getBoard().getTargets();
 		}
+		this.repaint();
 	}
 
 

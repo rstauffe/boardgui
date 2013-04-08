@@ -37,9 +37,9 @@ public class ClueGame {
 		comps = new LinkedList<ComputerPlayer>();
 		rand = new Random();
 		numActive = 0;
-		turn = -1;
+		turn = 0;
 		playerMoved = false;
-		roll = -1;
+		roll = rand.nextInt(6) + 1;
 		try {
 			loadCards("Cards.txt"); //loads cards from file
 			loadPlayers("Players.txt"); //loads players from file
@@ -187,15 +187,20 @@ public class ClueGame {
 	
 	public boolean nextTurn() {
 		turn++;
-		if (turn > numActive) {
+		if (turn > numActive - 1) { //max turn is players - 1
 			turn = 0;
-			setPlayerMoved(false);
+			setPlayerMoved(false); //senses if player has moved, reset on player turn
 		}
 		Player cPlayer = getCurrentPlayer();
 		
-		roll = rand.nextInt(6);
+		roll = rand.nextInt(6) + 1;
 		
-		board.startTargets(cPlayer.getIndex(), roll);
+		if (turn > 0) { //computer's move
+			ComputerPlayer ai = comps.get(turn - 1);
+			ai.setIndex(ai.pickLocation(roll, board));
+		} else {
+			board.startTargets(cPlayer.getIndex(), roll);
+		}
 		
 		return (turn == 0);
 	}
