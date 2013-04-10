@@ -12,7 +12,6 @@ public class DetectiveFrame extends JFrame {
 		setTitle("Notes");
 		setSize(600, 600);
 		setLocation(770, 20);
-		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); may not want to stop program by closing notes
 		NotePanel pPanel = new NotePanel("People", game);
 		GuessPanel pGuess = new GuessPanel("People", game);
 		NotePanel rPanel = new NotePanel("Rooms", game);

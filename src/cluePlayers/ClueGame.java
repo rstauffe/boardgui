@@ -137,6 +137,7 @@ public class ClueGame {
 		for (int numCompared = 0; numCompared < numActive; numCompared++) {
 			if (currentPlayer == playerIndex) {
 				currentPlayer++;
+				if (currentPlayer == numActive) currentPlayer = 0;
 				continue;
 			}
 			Player curPlayer;

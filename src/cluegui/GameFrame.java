@@ -58,6 +58,7 @@ public class GameFrame extends JFrame {
 		//Create game and use game board to create board panel
 		game = new ClueGame();
 		notes = new DetectiveFrame(game); //enables notes to see same cards as game
+		guessFrame = new SuggestionFrame(game, null);
 		boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		boardPanel.addMouseListener(new MouseAdapter() {
