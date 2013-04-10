@@ -35,6 +35,7 @@ public class GameFrame extends JFrame {
 
 	//scope these components higher so that they can easily have their properties changes during gameplay
 	private JTextField whoseTurn, dieRoll, guessText, guessResultText;
+	JButton nextPlayer, makeAccusation;
 	private JPanel cardDisplayPanel;
 	private SuggestionFrame guessFrame;
 	private int x, y;
@@ -61,6 +62,9 @@ public class GameFrame extends JFrame {
 				Point clickPt = me.getPoint();
 				x = (int) (clickPt.getY() / BoardPanel.BOARD_CELL_SIZE); //gets row
 				y = (int) (clickPt.getX() / BoardPanel.BOARD_CELL_SIZE); //gets column
+				if (game.isGameOver()) {
+					return;
+				}
 				if (game.getTurn() == 0 && game.isPlayerMoved() == false) {
 					Set<BoardCell> targets = game.getBoard().getTargets();
 					int index = game.getBoard().calcIndex(x, y);
@@ -126,7 +130,7 @@ public class GameFrame extends JFrame {
 		nPanel.add(whoseTurnPanel);
 
 		//Next Player and Make Accusation buttons
-		JButton nextPlayer = new JButton("Next Player");
+		nextPlayer = new JButton("Next Player");
 
 		class TurnListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -139,7 +143,7 @@ public class GameFrame extends JFrame {
 		}
 
 		nextPlayer.addActionListener(new TurnListener());
-		JButton makeAccusation = new JButton("Make Accusation");
+		makeAccusation = new JButton("Make Accusation");
 
 		class AccuseListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -152,9 +156,12 @@ public class GameFrame extends JFrame {
 					if (accusePanel.isSubmitted()) {
 						HashSet<Card> accusation = game.getPlayer().makeAccusation(accusePanel.getRoomCard(), 
 								accusePanel.getPersonCard(), accusePanel.getWeaponCard());
-						if (accusation.containsAll(game.getAnswer())) {
+						if (game.isSolutionCorect(accusation)) {
 							//placeholder dialog, need display
 							JOptionPane.showMessageDialog(null, "Accusation correct! You win!");
+							nextPlayer.setEnabled(false);
+							makeAccusation.setEnabled(false);
+							boardPanel.repaint();
 						} else {
 							JOptionPane.showMessageDialog(null, "Sorry, that's incorrect.");
 							game.setPlayerMoved(true); //ends the player's turn (since usually player leaves, rules are unclear)
@@ -327,6 +334,7 @@ public class GameFrame extends JFrame {
 		boardPanel.repaint(); //repaint to set accused's new location
 	}
 
+	
 	//MAIN
 	public static void main(String[] args) {
 		GameFrame gameGUI = new GameFrame();

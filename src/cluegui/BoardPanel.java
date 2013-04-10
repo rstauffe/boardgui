@@ -1,5 +1,6 @@
 package clueGUI;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -27,5 +28,31 @@ public class BoardPanel extends JPanel {
 		super.paintComponent(g);
 		game.getBoard().drawBoard(g);
 		game.drawPlayers(g);
+		
+		if (!game.isGameOver()) {
+			//originally had board drawing functions here instead of above
+		}
+		else {
+			//paint on board that game is over
+			int x = 235;
+			int y = 255;
+		
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(x - 85, y - 30, 240, 80);
+			g.setColor(Color.BLACK);
+			g.drawRect(x - 85, y - 30, 240, 80);
+			g.setColor(Color.BLACK);
+			g.drawString("GAME OVER", x, y);
+			if (game.getTurn() == 0) {
+				x = x - 60;
+				y = y + 25;
+				g.drawString("Congratulations, you won the game!", x, y);
+			}
+			else {
+				x = x - 30;
+				y = y + 25;
+				g.drawString("Player " + game.getTurn() + " won the game.", x, y);
+			}
+		}
 	}
 }

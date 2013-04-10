@@ -3,6 +3,7 @@ package cluePlayers;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
@@ -26,6 +27,8 @@ public class ClueGame {
 	private int roll;
 	private boolean playerMoved;
 	Card weaponCard, personCard, roomCard;
+	private boolean gameOver;
+	private int winningPlayer;
 
 	@SuppressWarnings("unchecked")
 	public ClueGame() {
@@ -41,6 +44,8 @@ public class ClueGame {
 		turn = -1;
 		playerMoved = true;
 		roll = rand.nextInt(6) + 1;
+		gameOver = false;
+		winningPlayer = -1;
 		try {
 			loadCards("Cards.txt"); //loads cards from file
 			loadPlayers("Players.txt"); //loads players from file
@@ -216,6 +221,20 @@ public class ClueGame {
 		}
 		
 		return (turn == 0);
+	}
+	
+	public boolean isSolutionCorect(HashSet<Card> accusation) {
+		boolean result = accusation.containsAll(answer);
+		if (result) {
+			//player has won the game
+			gameOver = true;
+			winningPlayer = turn;
+		}
+		return result;
+	}
+	
+	public boolean isGameOver() {
+		return gameOver;
 	}
 
 	public LinkedList<Card> getCards() {
