@@ -293,7 +293,7 @@ public class GameFrame extends JFrame {
 		this.repaint();
 		
 		if (accusing != null) {
-			checkAccusation(accusing);
+			checkAccusationAI(accusing,(ComputerPlayer) game.getCurrentPlayer());
 		}
 		//logic for AI to make a suggestion
 		if (game.getTurn() > 0 && game.getBoard().getCellAt(game.getCurrentPlayer().getIndex()).isRoom()) {
@@ -336,6 +336,9 @@ public class GameFrame extends JFrame {
 		if (shown == null) {
 			guessResultText.setText("No new clue");
 		} else {
+			for (ComputerPlayer ai : game.getComps()) {
+				ai.getSeen().add(shown); //add new card to stack of seen cards
+			}
 			guessResultText.setText(shown.getName()); //set result into result box
 		}
 		boardPanel.repaint(); //repaint to set accused's new location
@@ -347,7 +350,7 @@ public class GameFrame extends JFrame {
 					"Room: " + accusePanel.getRoomCard().getName() +
 					"\nPerson: " + accusePanel.getPersonCard().getName() +
 					"\nWeapon: " + accusePanel.getWeaponCard().getName() +
-					"\nAccusation correct! " + game.getCurrentPlayer().getName() + " wins!");
+					"\nAccusation correct! " + game.getPlayer().getName() + " wins!");
 			
 			//end game
 			nextPlayer.setEnabled(false);
@@ -358,13 +361,33 @@ public class GameFrame extends JFrame {
 					"Room: " + accusePanel.getRoomCard().getName() +
 					"\nPerson: " + accusePanel.getPersonCard().getName() +
 					"\nWeapon: " + accusePanel.getWeaponCard().getName() +
-					"\nSorry " + game.getCurrentPlayer().getName() + ", that's incorrect.");
+					"\nSorry " + game.getPlayer().getName() + ", that's incorrect.");
 			game.setPlayerMoved(true); //ends the player's turn (since usually player leaves, rules are unclear)
 			game.getBoard().getTargets().clear();
 			boardPanel.repaint(); //clears movement squares
 		}
 	}
 
+	public void checkAccusationAI(HashSet<Card> accusation, ComputerPlayer ai) {
+		if (game.isSolutionCorect(accusation)) {
+			JOptionPane.showMessageDialog(null, 
+					"Room: " + ai.getRoomCard().getName() +
+					"\nPerson: " + ai.getPersonCard().getName() +
+					"\nWeapon: " + ai.getWeaponCard().getName() +
+					"\nAccusation correct! " + game.getCurrentPlayer().getName() + " wins!");
+			
+			//end game
+			nextPlayer.setEnabled(false);
+			makeAccusation.setEnabled(false);
+			boardPanel.repaint();
+		} else {
+			JOptionPane.showMessageDialog(null, 
+					"Room: " + ai.getRoomCard().getName() +
+					"\nPerson: " + ai.getPersonCard().getName() +
+					"\nWeapon: " + ai.getWeaponCard().getName() +
+					"\nSorry " + game.getCurrentPlayer().getName() + ", that's incorrect.");
+		}
+	}
 	
 	//MAIN
 	public static void main(String[] args) {
