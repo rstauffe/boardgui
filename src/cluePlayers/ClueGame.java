@@ -201,7 +201,7 @@ public class ClueGame {
 		}
 	}
 	
-	public boolean nextTurn() {
+	public HashSet<Card> nextTurn() {
 		turn++;
 		if (turn > numActive - 1) { //max turn is players - 1
 			turn = 0;
@@ -214,13 +214,17 @@ public class ClueGame {
 		roll = rand.nextInt(6) + 1;
 		if (turn > 0) { //computer's move
 			ComputerPlayer ai = comps.get(turn - 1);
-			ai.setIndex(ai.pickLocation(roll, board));
-			board.getTargets().clear(); //dumps target list after move to ensure no draw of possibles
+			if (ai.isAccuse()) {
+				return ai.makeAccusation(ai.getRoomCard(), ai.getPersonCard(), ai.getWeaponCard());
+			} else {
+				ai.setIndex(ai.pickLocation(roll, board));
+				board.getTargets().clear(); //dumps target list after move to ensure no draw of possibles
+			}
 		} else {
 			board.startTargets(cPlayer.getIndex(), roll); //generates target list for use in GameFrame
 		}
 		
-		return (turn == 0);
+		return null;
 	}
 	
 	public boolean isSolutionCorect(HashSet<Card> accusation) {
