@@ -1,17 +1,13 @@
 package clueGUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -25,14 +21,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import clueGame.BoardCell;
 import clueGame.RoomCell;
 import cluePlayers.Card;
 import cluePlayers.ClueGame;
-import cluePlayers.ComputerPlayer;
 import cluePlayers.Player;
 
 public class GameFrame extends JFrame {
@@ -285,13 +277,9 @@ public class GameFrame extends JFrame {
 		}
 	}
 	
-	private void humanSuggest(Card roomCard) { //problem here causes menu to redraw continuously
-		Card personCard = null;
-		Card weaponCard = null;
-		//while (!guessFrame.isSubmitted()) { //need to find better solution for hold- document listener?
-			personCard = guessFrame.getPersonCard();
-			weaponCard = guessFrame.getWeaponCard();
-		//}
+	private void humanSuggest(Card roomCard) { 
+		Card personCard = guessFrame.getPersonCard();
+		Card weaponCard = guessFrame.getWeaponCard();
 		Card shown = game.makeSuggestion(roomCard, personCard, weaponCard, 0);
 		setSuggestion(roomCard, personCard, weaponCard, shown, game.getPlayer().getIndex());
 		guessFrame.setVisible(false);
