@@ -75,7 +75,7 @@ public class GameFrame extends JFrame {
 						game.getBoard().getTargets().clear();
 						game.setPlayerMoved(true);
 						if(game.getBoard().getCellAt(index).isRoom()) { //make a suggestion if in a room
-							RoomCell room = game.getBoard().getRoomCellAt(index);
+							RoomCell room = game.getBoard().getRoomCellAt(game.getPlayer().getIndex());
 							String roomName = game.getBoard().getRooms().get(room.getInitial());
 							Card roomCard = null;
 							for (Card c : game.getCards()) {
@@ -85,16 +85,8 @@ public class GameFrame extends JFrame {
 								}
 							}
 							guessFrame = new SuggestionFrame(game, roomCard);
-							guessFrame.setVisible(true); //shows suggestion chooser
-							Card personCard = null;
-							Card weaponCard = null;
-							while (!guessFrame.isSubmitted()) {
-								personCard = guessFrame.getPersonCard();
-								weaponCard = guessFrame.getWeaponCard();
-							}
-							Card shown = game.makeSuggestion(roomCard, personCard, weaponCard, 0);
-							setSuggestion(roomCard, personCard, weaponCard, shown, game.getPlayer().getIndex());
-							//need logic to find accused player and move
+							guessFrame.setVisible(true);
+							humanSuggest(roomCard);
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "That is not a valid move location!");
@@ -291,6 +283,18 @@ public class GameFrame extends JFrame {
 				//set to make accusation next turn
 			}
 		}
+	}
+	
+	private void humanSuggest(Card roomCard) { //problem here causes menu to redraw continuously
+		Card personCard = null;
+		Card weaponCard = null;
+		//while (!guessFrame.isSubmitted()) { //need to find better solution for hold- document listener?
+			personCard = guessFrame.getPersonCard();
+			weaponCard = guessFrame.getWeaponCard();
+		//}
+		Card shown = game.makeSuggestion(roomCard, personCard, weaponCard, 0);
+		setSuggestion(roomCard, personCard, weaponCard, shown, game.getPlayer().getIndex());
+		guessFrame.setVisible(false);
 	}
 
 	private void setSuggestion(Card roomCard, Card personCard, Card weaponCard, Card shown, int index) {
