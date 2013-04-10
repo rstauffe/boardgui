@@ -154,12 +154,20 @@ public class GameFrame extends JFrame {
 								accusePanel.getPersonCard(), accusePanel.getWeaponCard());
 						if (accusation.containsAll(game.getAnswer())) {
 							//placeholder dialog, need display
-							JOptionPane.showMessageDialog(null, "Accusation correct! You win!");
+							JOptionPane.showMessageDialog(null, 
+									"Room: " + accusePanel.getRoomCard().getName() +
+									"\nPerson: " + accusePanel.getPersonCard().getName() +
+									"\nWeapon: " + accusePanel.getWeaponCard().getName() +
+									"\nAccusation correct! You win!");
 						} else {
-							JOptionPane.showMessageDialog(null, "Sorry, that's incorrect.");
+							JOptionPane.showMessageDialog(null, 
+									"Room: " + accusePanel.getRoomCard().getName() +
+									"\nPerson: " + accusePanel.getPersonCard().getName() +
+									"\nWeapon: " + accusePanel.getWeaponCard().getName() +
+									"\nSorry, that's incorrect.");
 							game.setPlayerMoved(true); //ends the player's turn (since usually player leaves, rules are unclear)
 							game.getBoard().getTargets().clear();
-							boardPanel.repaint();
+							boardPanel.repaint(); //clears movement squares
 						}
 					}
 				}
