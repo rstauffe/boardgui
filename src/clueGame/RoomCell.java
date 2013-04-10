@@ -66,7 +66,7 @@ public class RoomCell extends BoardCell {
 		
 		//draw a doorway if applicable
 		if (isDoorway()) {
-			g.setColor(Color.BLUE);
+			g.setColor(Color.BLACK);
 			switch (doorDirection) {
 				case UP: 
 					g.fillRect(loc.x, loc.y, size.width, clueGUI.BoardPanel.DOOR_SIZE);
@@ -87,7 +87,7 @@ public class RoomCell extends BoardCell {
 		
 		//show label if applicable
 		if (isLabelCell) {
-			g.setColor(Color.BLUE);
+			g.setColor(Color.BLACK);
 			int margin = clueGUI.BoardPanel.BOARD_CELL_SIZE / 2;
 			g.drawString(roomName.toUpperCase(), loc.x + margin, loc.y + margin);
 		}

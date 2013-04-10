@@ -8,10 +8,8 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
 
-import clueGame.BadConfigFormatException;
 import clueGame.Board;
 import clueGame.RoomCell;
-import clueGame.WalkwayCell;
 
 public class ClueGame {
 	private LinkedList<Card> cards;
@@ -215,6 +213,7 @@ public class ClueGame {
 		if (turn > 0) { //computer's move
 			ComputerPlayer ai = comps.get(turn - 1);
 			if (ai.isAccuse()) {
+				ai.setAccuse(false); //not to keep making the same accusation
 				return ai.makeAccusation(ai.getRoomCard(), ai.getPersonCard(), ai.getWeaponCard());
 			} else {
 				ai.setIndex(ai.pickLocation(roll, board));
@@ -230,11 +229,15 @@ public class ClueGame {
 	public boolean isSolutionCorect(HashSet<Card> accusation) {
 		boolean result = accusation.containsAll(answer);
 		if (result) {
-			//player has won the game
+			//a player has won the game
 			gameOver = true;
 			winningPlayer = turn;
 		}
 		return result;
+	}
+	
+	public int getWinningPlayer() {
+		return winningPlayer;
 	}
 	
 	public boolean isGameOver() {

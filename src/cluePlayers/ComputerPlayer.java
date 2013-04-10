@@ -1,5 +1,6 @@
 package cluePlayers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
@@ -42,13 +43,17 @@ public class ComputerPlayer extends Player {
 		}
 		if (cell != null) { //checks if current cell is a room
 			if (!rooms.isEmpty()) { //checks if there are doors to enter
+				ArrayList<RoomCell> toRemove = new ArrayList<RoomCell>();
 				for (RoomCell c : rooms) {
 					if (c.getInitial() == cell.getInitial()) {
-						rooms.remove(c); //removes from possible rooms
-						int row = c.getRow();
-						int col = c.getCol();
-						targets.remove(board.getCellAt(board.calcIndex(row, col))); //remove from possible targets
+						toRemove.add(c);
 					}
+				}
+				for (RoomCell r : toRemove) {
+					rooms.remove(r); //removes from possible rooms
+					int row = r.getRow();
+					int col = r.getCol();
+					targets.remove(board.getCellAt(board.calcIndex(row, col))); //remove from possible targets
 				}
 			}
 		}
