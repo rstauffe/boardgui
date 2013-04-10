@@ -25,6 +25,7 @@ public class ClueGame {
 	private int numActive; //number of currently active players
 	private int roll;
 	private boolean playerMoved;
+	Card weaponCard, personCard, roomCard;
 
 	@SuppressWarnings("unchecked")
 	public ClueGame() {
@@ -160,10 +161,19 @@ public class ClueGame {
 		LinkedList<Card> weapons = new LinkedList<Card>();
 		LinkedList<Card> rooms = new LinkedList<Card>();
 		sortList(people, weapons, rooms, possibilities);
-		Card a = people.get(rand.nextInt(people.size()));
-		Card b = weapons.get(rand.nextInt(weapons.size()));
-		Card c = rooms.get(rand.nextInt(rooms.size()));
-		return makeSuggestion(a, b, c, playerIndex);
+		personCard = people.get(rand.nextInt(people.size()));
+		weaponCard = weapons.get(rand.nextInt(weapons.size()));
+		//Card c = rooms.get(rand.nextInt(rooms.size())); //obsolete code to select room
+		RoomCell room = board.getRoomCellAt(comps.get(playerIndex - 1).getIndex());
+		String roomName = board.getRooms().get(room.getInitial());
+		roomCard = null;
+		for (Card c : cards) {
+			if (c.getName().equals(roomName)) {
+				roomCard = c;
+				break;
+			}
+		}
+		return makeSuggestion(personCard, weaponCard, roomCard, playerIndex);
 	}
 
 	public void sortList(LinkedList<Card> people, LinkedList<Card> weapons, 
@@ -193,18 +203,14 @@ public class ClueGame {
 		if (turn == 0) {
 			setPlayerMoved(false); //senses if player has moved, reset on player turn
 		}
-		System.out.println("Current turn: " + turn);
 		Player cPlayer = getCurrentPlayer();
 		
 		roll = rand.nextInt(6) + 1;
-		System.out.println("Rolled die: " + roll);
 		if (turn > 0) { //computer's move
-			System.out.println("AI move");
 			ComputerPlayer ai = comps.get(turn - 1);
 			ai.setIndex(ai.pickLocation(roll, board));
 			board.getTargets().clear(); //dumps target list after move to ensure no draw of possibles
 		} else {
-			System.out.println("Human turn");
 			board.startTargets(cPlayer.getIndex(), roll); //generates target list for use in GameFrame
 		}
 		
@@ -296,6 +302,30 @@ public class ClueGame {
 
 	public void setPlayerMoved(boolean playerMoved) {
 		this.playerMoved = playerMoved;
+	}
+
+	public Card getWeaponCard() {
+		return weaponCard;
+	}
+
+	public void setWeaponCard(Card weaponCard) {
+		this.weaponCard = weaponCard;
+	}
+
+	public Card getPersonCard() {
+		return personCard;
+	}
+
+	public void setPersonCard(Card personCard) {
+		this.personCard = personCard;
+	}
+
+	public Card getRoomCard() {
+		return roomCard;
+	}
+
+	public void setRoomCard(Card roomCard) {
+		this.roomCard = roomCard;
 	}
 
 	public void drawPlayers(Graphics g) {

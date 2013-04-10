@@ -343,7 +343,7 @@ public class Board {
 	public LinkedList<Integer> getAdjList(int cell) {
 		return adjacencies.get(cell);
 	}
-	
+
 	//returns a location for drawing based on the row and col parameters
 	public Point getDrawingPoint(int row, int col) {
 		Dimension size = new Dimension(clueGUI.BoardPanel.BOARD_CELL_SIZE, clueGUI.BoardPanel.BOARD_CELL_SIZE);

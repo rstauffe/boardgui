@@ -29,6 +29,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import clueGame.BoardCell;
+import clueGame.RoomCell;
 import cluePlayers.Card;
 import cluePlayers.ClueGame;
 
@@ -61,7 +62,6 @@ public class GameFrame extends JFrame {
 				Point clickPt = me.getPoint();
 				x = (int) (clickPt.getY() / BoardPanel.BOARD_CELL_SIZE); //gets row
 				y = (int) (clickPt.getX() / BoardPanel.BOARD_CELL_SIZE); //gets column
-				System.out.println(x + ", " + y);
 				if (game.getTurn() == 0 && game.isPlayerMoved() == false) {
 					Set<BoardCell> targets = game.getBoard().getTargets();
 					int index = game.getBoard().calcIndex(x, y);
@@ -69,6 +69,27 @@ public class GameFrame extends JFrame {
 						game.getPlayer().setIndex(index);
 						game.getBoard().getTargets().clear();
 						game.setPlayerMoved(true);
+						if(game.getBoard().getCellAt(index).isRoom()) { //make a suggestion if in a room
+							RoomCell room = game.getBoard().getRoomCellAt(index);
+							String roomName = game.getBoard().getRooms().get(room.getInitial());
+							Card roomCard = null;
+							for (Card c : game.getCards()) {
+								if (c.getName().equals(roomName)) {
+									roomCard = c;
+									break;
+								}
+							}
+							Card personCard = null; //placeholders for dialog selections
+							Card weaponCard = null;
+							Card shown = game.makeSuggestion(roomCard, personCard, weaponCard, 0);
+							guessText.setText(roomCard.getName() + " " + personCard.getName() + " " +
+									weaponCard.getName()); //set guess into window
+							if (shown == null) {
+								guessResultText.setText("(No matches)");
+							} else {
+								guessResultText.setText(shown.getName()); //set result into result box
+							}
+						}
 					} else {
 						JOptionPane.showMessageDialog(null, "That is not a valid move location!");
 					}
