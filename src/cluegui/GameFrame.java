@@ -59,6 +59,7 @@ public class GameFrame extends JFrame {
 		game = new ClueGame();
 		notes = new DetectiveFrame(game); //enables notes to see same cards as game
 		guessFrame = new SuggestionFrame(game, null);
+		//guessFrame.setVisible(true);
 		boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		boardPanel.addMouseListener(new MouseAdapter() {
