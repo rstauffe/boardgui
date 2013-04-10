@@ -70,11 +70,9 @@ public class GameFrame extends JFrame {
 					Set<BoardCell> targets = game.getBoard().getTargets();
 					int index = game.getBoard().calcIndex(x, y);
 					if (targets.contains(game.getBoard().getCellAt(index))) {
-						game.getPlayer().setIndex(index);
-						game.getBoard().getTargets().clear();
-						game.setPlayerMoved(true);
-						if(game.getBoard().getCellAt(index).isRoom()) { //make a suggestion if in a room
-							RoomCell room = game.getBoard().getRoomCellAt(game.getPlayer().getIndex());
+						//make a suggestion if in a room
+						if (game.getBoard().getCellAt(index).isRoom()) { 
+							RoomCell room = game.getBoard().getRoomCellAt(index);
 							String roomName = game.getBoard().getRooms().get(room.getInitial());
 							Card roomCard = null;
 							for (Card c : game.getCards()) {
@@ -85,7 +83,19 @@ public class GameFrame extends JFrame {
 							}
 							guessFrame = new SuggestionFrame(game, roomCard);
 							guessFrame.setVisible(true);
-							humanSuggest(roomCard);
+							if (guessFrame.isSubmitted()) {
+								//dont move player unless they submit the suggestion
+								game.getPlayer().setIndex(index);
+								game.getBoard().getTargets().clear();
+								game.setPlayerMoved(true);
+								humanSuggest(roomCard);
+							}
+						}
+						else {
+							//not in a room, simply move player
+							game.getPlayer().setIndex(index);
+							game.getBoard().getTargets().clear();
+							game.setPlayerMoved(true);
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "That is not a valid move location!");

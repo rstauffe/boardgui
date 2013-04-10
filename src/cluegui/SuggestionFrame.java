@@ -19,17 +19,20 @@ import cluePlayers.ClueGame;
 public class SuggestionFrame extends JDialog {
 	private Card personCard, weaponCard;
 	private SuggestionPanel display;
+	private boolean isSubmitted;
 	
 	public SuggestionFrame(ClueGame game, Card roomCard) {
+		isSubmitted = false;
 		setModal(true);
 		setTitle("Make a Suggestion");
 		setSize(300, 200);
 		display = new SuggestionPanel(game, roomCard);
-		JButton submit = new JButton("Submit");
+		JButton submit = new JButton("Submit");	
 		
 		class ButtonListener implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				isSubmitted = true;
 				personCard = display.getPersonCard();
 				weaponCard = display.getWeaponCard();
 				setVisible(false);
@@ -47,5 +50,9 @@ public class SuggestionFrame extends JDialog {
 
 	public Card getWeaponCard() {
 		return weaponCard;
+	}
+	
+	public boolean isSubmitted() {
+		return isSubmitted;
 	}
 }
