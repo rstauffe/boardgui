@@ -43,6 +43,7 @@ public class GameFrame extends JFrame {
 	//scope these components higher so that they can easily have their properties changes during gameplay
 	private JTextField whoseTurn, dieRoll, guessText, guessResultText;
 	private JPanel cardDisplayPanel;
+	private SuggestionFrame guessFrame;
 	private int x, y;
 	private BoardPanel boardPanel;
 
@@ -81,8 +82,14 @@ public class GameFrame extends JFrame {
 									break;
 								}
 							}
-							Card personCard = null; //placeholders for dialog selections
+							guessFrame = new SuggestionFrame(game, roomCard);
+							guessFrame.setVisible(true); //shows suggestion chooser
+							Card personCard = null;
 							Card weaponCard = null;
+							while (!guessFrame.isSubmitted()) {
+								personCard = guessFrame.getPersonCard();
+								weaponCard = guessFrame.getWeaponCard();
+							}
 							Card shown = game.makeSuggestion(roomCard, personCard, weaponCard, 0);
 							setSuggestion(roomCard, personCard, weaponCard, shown, game.getPlayer().getIndex());
 							//need logic to find accused player and move
@@ -148,6 +155,9 @@ public class GameFrame extends JFrame {
 
 		class AccuseListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
+				if (game.getTurn() > 0) {
+					JOptionPane.showMessageDialog(null, "You can only make an accusation on your turn!");
+				}
 				//need to write accusation logic
 			}
 		}
@@ -287,7 +297,7 @@ public class GameFrame extends JFrame {
 		if (personCard.getName().equals(game.getPlayer().getName())) { //find if player needs to be moved
 			game.getPlayer().setIndex(index);
 		} else { //else check which computer was accused
-			for (ComputerPlayer ai : game.getComps()) {
+			for (Player ai : game.getComps()) {
 				if (personCard.getName().equals(ai.getName())) {
 					ai.setIndex(index);
 					break;
@@ -295,10 +305,10 @@ public class GameFrame extends JFrame {
 			}
 		}
 		
-		guessText.setText(roomCard.getName() + ", " + personCard.getName() + ", " +
+		guessText.setText(personCard.getName() + ", " + roomCard.getName() + ", " +
 				weaponCard.getName()); //set guess into window
 		if (shown == null) {
-			guessResultText.setText("(No matches)");
+			guessResultText.setText("No new clue");
 		} else {
 			guessResultText.setText(shown.getName()); //set result into result box
 		}
