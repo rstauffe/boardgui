@@ -3,7 +3,6 @@ package clueGame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
 
 public abstract class BoardCell {
@@ -65,11 +64,13 @@ public abstract class BoardCell {
 
 	public void drawTarget(Graphics g, Dimension size, Point loc) { //draws cell if it is a potential target
 		if (isRoom()) {
+			//set room cells to blue
 			g.setColor(Color.BLUE);
 			g.fillRect(loc.x, loc.y, size.width, size.height);
 			g.setColor(Color.BLACK);
 			g.drawRect(loc.x, loc.y, size.width, size.height);
 		} else {
+			//set all other cells to cyan
 			g.setColor(Color.CYAN);
 			g.fillRect(loc.x, loc.y, size.width, size.height);
 			g.setColor(Color.BLACK);

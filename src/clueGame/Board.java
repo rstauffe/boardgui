@@ -1,6 +1,5 @@
 package clueGame;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -365,10 +364,7 @@ public class Board {
 		//paint the board cells
 		Dimension size = new Dimension(clueGUI.BoardPanel.BOARD_CELL_SIZE, clueGUI.BoardPanel.BOARD_CELL_SIZE);
 		Point loc = new Point(0, 0);
-		int row = 0;
-		int col = 0;
 		
-		//for (int i = 0; i < cells.size(); i++) {
 		for (int i = cells.size() - 1; i >= 0; i--) {
 			BoardCell cell = cells.get(i);
 			loc = getDrawingPoint(cell.getRow(), cell.getCol());
@@ -376,14 +372,6 @@ public class Board {
 				cell.drawTarget(g, size, loc);
 			} else {
 				cell.draw(g, size, loc);
-			}
-			
-			//increment column
-			col++;
-			if (col >= numColumns) {
-				//column exceeds max, go to next row
-				col = 0;
-				row++;
 			}
 		}
 	}

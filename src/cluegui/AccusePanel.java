@@ -33,7 +33,7 @@ public class AccusePanel extends JPanel {
 		for (Card c : roomList) {
 			rooms.addItem(c.getName());
 			if (roomCard == null)
-				roomCard = c;
+				roomCard = c; //set defaults
 		}
 		for (Card c : peopleList) {
 			people.addItem(c.getName());

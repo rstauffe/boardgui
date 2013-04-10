@@ -70,8 +70,9 @@ public class GameFrame extends JFrame {
 					Set<BoardCell> targets = game.getBoard().getTargets();
 					int index = game.getBoard().calcIndex(x, y);
 					if (targets.contains(game.getBoard().getCellAt(index))) {
-						//make a suggestion if in a room
+						//check if target is a room
 						if (game.getBoard().getCellAt(index).isRoom()) { 
+							//player is entering a room, show suggestion form
 							RoomCell room = game.getBoard().getRoomCellAt(index);
 							String roomName = game.getBoard().getRooms().get(room.getInitial());
 							Card roomCard = null;
@@ -81,10 +82,12 @@ public class GameFrame extends JFrame {
 									break;
 								}
 							}
+							//show suggestion form and wait for user input
 							guessFrame = new SuggestionFrame(game, roomCard);
 							guessFrame.setVisible(true);
+							//only move player if they have submitted the suggestion
 							if (guessFrame.isSubmitted()) {
-								//dont move player unless they submit the suggestion
+								//submit suggestion and move player
 								game.getPlayer().setIndex(index);
 								game.getBoard().getTargets().clear();
 								game.setPlayerMoved(true);
@@ -92,7 +95,7 @@ public class GameFrame extends JFrame {
 							}
 						}
 						else {
-							//not in a room, simply move player
+							//not moving to a room, simply move player
 							game.getPlayer().setIndex(index);
 							game.getBoard().getTargets().clear();
 							game.setPlayerMoved(true);
@@ -342,22 +345,42 @@ public class GameFrame extends JFrame {
 	}
 	
 	public void checkAccusation(HashSet<Card> accusation) {
+		//get cards
+		Card roomCard = null;
+		Card personCard = null;
+		Card weaponCard = null;
+		for (Card c: accusation) {
+			switch (c.getType()) {
+				case PERSON:
+					personCard = c;
+					break;
+				case ROOM:
+					roomCard = c;
+					break;
+				case WEAPON:
+					weaponCard = c;
+					break;
+				default:
+					break;
+			}
+		}
+		
+		//check solution
 		if (game.isSolutionCorect(accusation)) {
 			JOptionPane.showMessageDialog(null, 
-					"Room: " + accusePanel.getRoomCard().getName() +
-					"\nPerson: " + accusePanel.getPersonCard().getName() +
-					"\nWeapon: " + accusePanel.getWeaponCard().getName() +
+					"Room: " + roomCard.getName() +
+					"\nPerson: " + personCard.getName() +
+					"\nWeapon: " + weaponCard.getName() +
 					"\nAccusation correct! " + game.getCurrentPlayer().getName() + " wins!");
-			
 			//end game
 			nextPlayer.setEnabled(false);
 			makeAccusation.setEnabled(false);
 			boardPanel.repaint();
 		} else {
 			JOptionPane.showMessageDialog(null, 
-					"Room: " + accusePanel.getRoomCard().getName() +
-					"\nPerson: " + accusePanel.getPersonCard().getName() +
-					"\nWeapon: " + accusePanel.getWeaponCard().getName() +
+					"Room: " + roomCard.getName() +
+					"\nPerson: " + personCard.getName() +
+					"\nWeapon: " + weaponCard.getName() +
 					"\nSorry " + game.getCurrentPlayer().getName() + ", that's incorrect.");
 			game.setPlayerMoved(true); //ends the player's turn (since usually player leaves, rules are unclear)
 			game.getBoard().getTargets().clear();

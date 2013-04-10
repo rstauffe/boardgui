@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 
-import clueGame.Board;
-
 public class Player {
 	private String name;
 	private LinkedList<Card> cards;
