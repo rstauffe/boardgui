@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -38,6 +39,7 @@ public class GameFrame extends JFrame {
 	private SuggestionFrame guessFrame;
 	private int x, y;
 	private BoardPanel boardPanel;
+	private AccuseFrame accusePanel;
 
 	public GameFrame() {
 		super();
@@ -51,7 +53,7 @@ public class GameFrame extends JFrame {
 		game = new ClueGame();
 		notes = new DetectiveFrame(game); //enables notes to see same cards as game
 		guessFrame = new SuggestionFrame(game, null);
-		//guessFrame.setVisible(true);
+		accusePanel = new AccuseFrame(game);
 		boardPanel = new BoardPanel(game);
 		boardPanel.setPreferredSize(new Dimension(-1, 580));	
 		boardPanel.addMouseListener(new MouseAdapter() {
@@ -143,8 +145,24 @@ public class GameFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (game.getTurn() > 0) {
 					JOptionPane.showMessageDialog(null, "You can only make an accusation on your turn!");
+				} else if (game.isPlayerMoved()) {
+					JOptionPane.showMessageDialog(null, "You can only make an accusation at the beginning of your turn!");
+				} else {
+					accusePanel.setVisible(true);
+					if (accusePanel.isSubmitted()) {
+						HashSet<Card> accusation = game.getPlayer().makeAccusation(accusePanel.getRoomCard(), 
+								accusePanel.getPersonCard(), accusePanel.getWeaponCard());
+						if (accusation.containsAll(game.getAnswer())) {
+							//placeholder dialog, need display
+							JOptionPane.showMessageDialog(null, "Accusation correct! You win!");
+						} else {
+							JOptionPane.showMessageDialog(null, "Sorry, that's incorrect.");
+							game.setPlayerMoved(true); //ends the player's turn (since usually player leaves, rules are unclear)
+							game.getBoard().getTargets().clear();
+							boardPanel.repaint();
+						}
+					}
 				}
-				//need to write accusation logic
 			}
 		}
 
