@@ -32,6 +32,8 @@ import clueGame.BoardCell;
 import clueGame.RoomCell;
 import cluePlayers.Card;
 import cluePlayers.ClueGame;
+import cluePlayers.ComputerPlayer;
+import cluePlayers.Player;
 
 public class GameFrame extends JFrame {
 
@@ -82,13 +84,8 @@ public class GameFrame extends JFrame {
 							Card personCard = null; //placeholders for dialog selections
 							Card weaponCard = null;
 							Card shown = game.makeSuggestion(roomCard, personCard, weaponCard, 0);
-							guessText.setText(roomCard.getName() + " " + personCard.getName() + " " +
-									weaponCard.getName()); //set guess into window
-							if (shown == null) {
-								guessResultText.setText("(No matches)");
-							} else {
-								guessResultText.setText(shown.getName()); //set result into result box
-							}
+							setSuggestion(roomCard, personCard, weaponCard, shown, game.getPlayer().getIndex());
+							//need logic to find accused player and move
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "That is not a valid move location!");
@@ -273,8 +270,40 @@ public class GameFrame extends JFrame {
 		setWhoseTurn();
 		setRoll();
 		this.repaint();
+		
+		//logic for AI to make a suggestion
+		if (game.getTurn() > 0 && game.getBoard().getCellAt(game.getCurrentPlayer().getIndex()).isRoom()) {
+			Card shown = game.makeSuggestion(game.getTurn()); //AI makes suggestion
+			setSuggestion(game.getRoomCard(), game.getPersonCard(), game.getWeaponCard(), shown, game.getCurrentPlayer().getIndex());
+			if (shown == null) {
+				//set to make accusation next turn
+			}
+		}
 	}
 
+	private void setSuggestion(Card roomCard, Card personCard, Card weaponCard, Card shown, int index) {
+		//takes the 3 guess cards, the disproving card, and the index of the accuser
+		//logic to move accused to accuser's location
+		if (personCard.getName().equals(game.getPlayer().getName())) { //find if player needs to be moved
+			game.getPlayer().setIndex(index);
+		} else { //else check which computer was accused
+			for (ComputerPlayer ai : game.getComps()) {
+				if (personCard.getName().equals(ai.getName())) {
+					ai.setIndex(index);
+					break;
+				}
+			}
+		}
+		
+		guessText.setText(roomCard.getName() + ", " + personCard.getName() + ", " +
+				weaponCard.getName()); //set guess into window
+		if (shown == null) {
+			guessResultText.setText("(No matches)");
+		} else {
+			guessResultText.setText(shown.getName()); //set result into result box
+		}
+		boardPanel.repaint(); //repaint to set accused's new location
+	}
 
 	//MAIN
 	public static void main(String[] args) {
