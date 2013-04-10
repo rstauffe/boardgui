@@ -26,6 +26,7 @@ import clueGame.BoardCell;
 import clueGame.RoomCell;
 import cluePlayers.Card;
 import cluePlayers.ClueGame;
+import cluePlayers.ComputerPlayer;
 import cluePlayers.Player;
 
 public class GameFrame extends JFrame {
@@ -152,23 +153,7 @@ public class GameFrame extends JFrame {
 					if (accusePanel.isSubmitted()) {
 						HashSet<Card> accusation = game.getPlayer().makeAccusation(accusePanel.getRoomCard(), 
 								accusePanel.getPersonCard(), accusePanel.getWeaponCard());
-						if (accusation.containsAll(game.getAnswer())) {
-							//placeholder dialog, need display
-							JOptionPane.showMessageDialog(null, 
-									"Room: " + accusePanel.getRoomCard().getName() +
-									"\nPerson: " + accusePanel.getPersonCard().getName() +
-									"\nWeapon: " + accusePanel.getWeaponCard().getName() +
-									"\nAccusation correct! You win!");
-						} else {
-							JOptionPane.showMessageDialog(null, 
-									"Room: " + accusePanel.getRoomCard().getName() +
-									"\nPerson: " + accusePanel.getPersonCard().getName() +
-									"\nWeapon: " + accusePanel.getWeaponCard().getName() +
-									"\nSorry, that's incorrect.");
-							game.setPlayerMoved(true); //ends the player's turn (since usually player leaves, rules are unclear)
-							game.getBoard().getTargets().clear();
-							boardPanel.repaint(); //clears movement squares
-						}
+						checkAccusation(accusation);
 					}
 				}
 			}
@@ -288,17 +273,24 @@ public class GameFrame extends JFrame {
 	}
 
 	private void nextPlayer() {
-		game.nextTurn();
+		HashSet<Card> accusing = game.nextTurn();
 		setWhoseTurn();
 		setRoll();
 		this.repaint();
 		
+		if (accusing != null) {
+			checkAccusation(accusing);
+		}
 		//logic for AI to make a suggestion
 		if (game.getTurn() > 0 && game.getBoard().getCellAt(game.getCurrentPlayer().getIndex()).isRoom()) {
+			ComputerPlayer ai = (ComputerPlayer) game.getCurrentPlayer(); //gets AI
 			Card shown = game.makeSuggestion(game.getTurn()); //AI makes suggestion
-			setSuggestion(game.getRoomCard(), game.getPersonCard(), game.getWeaponCard(), shown, game.getCurrentPlayer().getIndex());
+			setSuggestion(game.getRoomCard(), game.getPersonCard(), game.getWeaponCard(), shown, ai.getIndex());
 			if (shown == null) {
-				//set to make accusation next turn
+				ai.setAccuse(true); //set flags to make an accusation next turn
+				ai.setRoomCard(game.getRoomCard());
+				ai.setPersonCard(game.getPersonCard());
+				ai.setWeaponCard(game.getWeaponCard());
 			}
 		}
 	}
@@ -333,6 +325,25 @@ public class GameFrame extends JFrame {
 			guessResultText.setText(shown.getName()); //set result into result box
 		}
 		boardPanel.repaint(); //repaint to set accused's new location
+	}
+	
+	public void checkAccusation(HashSet<Card> accusation) {
+		if (accusation.containsAll(game.getAnswer())) {
+			JOptionPane.showMessageDialog(null, 
+					"Room: " + accusePanel.getRoomCard().getName() +
+					"\nPerson: " + accusePanel.getPersonCard().getName() +
+					"\nWeapon: " + accusePanel.getWeaponCard().getName() +
+					"\nAccusation correct! " + game.getCurrentPlayer().getName() + " wins!");
+		} else {
+			JOptionPane.showMessageDialog(null, 
+					"Room: " + accusePanel.getRoomCard().getName() +
+					"\nPerson: " + accusePanel.getPersonCard().getName() +
+					"\nWeapon: " + accusePanel.getWeaponCard().getName() +
+					"\nSorry " + game.getCurrentPlayer().getName() + ", that's incorrect.");
+			game.setPlayerMoved(true); //ends the player's turn (since usually player leaves, rules are unclear)
+			game.getBoard().getTargets().clear();
+			boardPanel.repaint(); //clears movement squares
+		}
 	}
 
 	//MAIN

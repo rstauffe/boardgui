@@ -12,16 +12,20 @@ import clueGame.RoomCell;
 public class ComputerPlayer extends Player {
 	private LinkedList<Card> seen;
 	private Random rand = new Random();
+	private boolean accuse;
+	private Card roomCard, personCard, weaponCard;
 
 	public ComputerPlayer(String name, LinkedList<Card> cards, String color, int index) {
 		super(name, cards, color, index);
 		seen = new LinkedList<Card>();
 		for (Card c : cards) seen.add(c);
+		accuse = false;
 	}
 
 	public ComputerPlayer(String name, String color, int index) {
 		super(name, color, index);
 		seen = new LinkedList<Card>();
+		accuse = false;
 	}
 
 	public int pickLocation(int moves, Board board) { //need to account for not reentering same room
@@ -82,5 +86,37 @@ public class ComputerPlayer extends Player {
 
 	public void setSeen(LinkedList<Card> seen) {
 		this.seen = seen;
+	}
+
+	public boolean isAccuse() {
+		return accuse;
+	}
+
+	public void setAccuse(boolean accuse) {
+		this.accuse = accuse;
+	}
+
+	public Card getRoomCard() {
+		return roomCard;
+	}
+
+	public void setRoomCard(Card roomCard) {
+		this.roomCard = roomCard;
+	}
+
+	public Card getPersonCard() {
+		return personCard;
+	}
+
+	public void setPersonCard(Card personCard) {
+		this.personCard = personCard;
+	}
+
+	public Card getWeaponCard() {
+		return weaponCard;
+	}
+
+	public void setWeaponCard(Card weaponCard) {
+		this.weaponCard = weaponCard;
 	}
 }
